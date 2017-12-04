@@ -11,7 +11,7 @@ public class Main {
 			String[] lineSplit = line.split("\\(");
 			String action = lineSplit[0];
 			if(action.equals("begin")) {
-				
+				System.out.println("dog");
 			}
 			else if (action.equals("beginRO")) {
 				
