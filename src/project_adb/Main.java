@@ -32,7 +32,7 @@ public class Main {
 				
 			}
 			else if(action.equals("end")) {
-				System.out.println("not end yet");
+				
 			}
 			
 			
