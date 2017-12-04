@@ -7,17 +7,25 @@ public class Main {
 	public static void readfile() throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader("testcase/test1.txt"));
 		String line = null;
+		TM tm = new TM();
 		while((line = br.readLine()) != null) {
 			String[] lineSplit = line.split("\\(");
 			String action = lineSplit[0];
 			if(action.equals("begin")) {
-				System.out.println("dog");
+				String transactionID = lineSplit[1].split("\\)")[0];
+				tm.begin(transactionID, "RW");
 			}
 			else if (action.equals("beginRO")) {
-				
+				String transactionID = lineSplit[1].split("\\)")[0];
+				tm.begin(transactionID, "RO");
 			}
 			else if(action.equals("W")) {
+				String[] actionInfo = lineSplit[1].split(",");
+				String transactionID = actionInfo[0];
+				String onChangeVariable = actionInfo[1];
+				int onChangeValue = Integer.parseInt(actionInfo[2].split("\\)")[0]);
 				
+				tm.write(transactionID, onChangeVariable, onChangeValue);
 			}
 			else if(action.equals("R")) {
 				
@@ -32,7 +40,7 @@ public class Main {
 				
 			}
 			else if(action.equals("end")) {
-				System.out.println("miao");
+				
 			}
 			
 			

@@ -2,6 +2,7 @@ package project_adb;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Hashtable;
 
 public class Transaction {
 	private String transactionID;
@@ -9,6 +10,7 @@ public class Transaction {
 	private String transactionType;
 	protected HashMap<Integer ,List<String>> locks;
 	protected String currentState;
+	public Hashtable<Variable, Integer> tempTable; // temporarily store changed value
 	
 	protected Transaction(String id, String transactionType) {
 		this.transactionID = id; // such as T1, T2...,etc
