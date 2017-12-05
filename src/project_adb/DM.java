@@ -26,6 +26,20 @@ public class DM {
 		return false;
 	}
 	
+	protected static void copyCurrentDB(Transaction transaction) {
+		for(int i = 1 ; i < 21; i++) {
+			transaction.tempTable.put("x" + i, -1);
+		}
+		for(String vID : transaction.tempTable.keySet()) {
+			for(Site s : database) {
+				if(s.isUp() && s.isVariableExists(vID) && (transaction.tempTable.get(vID) == -1)) {
+					int value = s.getVariable(vID).getValue();
+					transaction.tempTable.replace(vID, value);
+				}
+			}
+		}
+	}
+	
 	protected static void setWriteLock(Transaction transaction, String variableID, String lockType) {
 		// filling locktalbe
 		for(Site s : database) {

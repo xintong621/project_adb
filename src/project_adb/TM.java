@@ -27,7 +27,7 @@ public class TM {
 		 * */
 		Transaction transaction = new Transaction(transactionID, transactionType);
 		if(transaction.getType().equals("RO")) {
-			
+			DM.copyCurrentDB(transaction);
 		}
 		System.out.println(transactionID + " of type " + transactionType + " successfully initialized");
 		runningTransaction.add(transaction);
@@ -35,10 +35,16 @@ public class TM {
 		return transaction;
 	}
 	
-	public void read() {
+	public int read(String transactionID, String onReadVariableID) {
 		/*
 		 * execute read action(consistency, acquire readlock)
 		 * */
+		Transaction transaction = getTransaction(transactionID);
+		if(transaction.getType().equals("RO")) {
+			return transaction.tempTable.get(onReadVariableID);
+		} else {
+			return -1;
+		}
 	}
 	
 	public Transaction getTransaction(String transactionID) {
@@ -63,6 +69,7 @@ public class TM {
 			if(DM.checkWriteLock(onChangeVariable) == false) {
 				// execute write action
 				DM.setWriteLock(transaction, onChangeVariable, "WL");
+
 				// write to tempTable
 				transaction.tempTable.put(onChangeVariable, onChangeValue);
 				System.out.println("transaction " + transaction.getTransactionID() + " has changed variable " + onChangeVariable + " to " + onChangeValue
@@ -85,9 +92,6 @@ public class TM {
 		}
 	}
 	
-	public void updateAllSites(String variable) {
-		// update all sites with temptable
-	}
 	
 	public void end(String transactionID) {
 		// for(transaction.tempTable(variable))
@@ -104,6 +108,7 @@ public class TM {
 		}
 		
 		System.out.println("Transaction " + transaction.getTransactionID() + " has ended.");
+		
 		terminate(transaction);
 	}
 	

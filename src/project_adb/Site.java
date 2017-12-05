@@ -21,7 +21,7 @@ public class Site {
 			if (i % 2 == 0) {
 				variableList.put(var, true);
 				//isReady.put(var.getVariableID(), true);
-			} else if ((i + 1) % 10 == siteIndex) {
+			} else if (i % 10 + 1== siteIndex) {
 				variableList.put(var, true);
 				//isReady.put(var.getVariableID(), true);
 			} else {

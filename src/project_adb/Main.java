@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Main {
 	public static void readfile() throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader("testcase/test1.txt"));
+		BufferedReader br = new BufferedReader(new FileReader("testcase/test8.txt"));
 		String line = null;
 		TM tm = new TM();
 		DM dm = new DM();
@@ -24,13 +24,16 @@ public class Main {
 			else if(action.equals("W")) {
 				String[] actionInfo = lineSplit[1].split(",");
 				String transactionID = actionInfo[0];
-				String onChangeVariable = actionInfo[1];
+				String onChangeVariableID = actionInfo[1];
 				int onChangeValue = Integer.parseInt(actionInfo[2].split("\\)")[0]);
 				
-				tm.write(transactionID, onChangeVariable, onChangeValue);
+				tm.write(transactionID, onChangeVariableID, onChangeValue);
 			}
 			else if(action.equals("R")) {
-
+				String[] actionInfo = lineSplit[1].split(",");
+				String transactionID = actionInfo[0];
+				String onReadVariableID = actionInfo[1].split("\\)")[0];
+				System.out.println(transactionID + " : " + onReadVariableID + " : " + tm.read(transactionID, onReadVariableID));
 			}
 			else if(action.equals("dump")) {
 				String content;
