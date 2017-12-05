@@ -2,20 +2,17 @@ package project_adb;
 
 import java.util.HashMap;
 
-class Lock {
-	
-}
-
 public class Site {
 	private int siteIndex;
 	private boolean isUp; // All sites are up in initial state
 	private HashMap<Variable, Boolean> variable; // Boolean ====>> exist
-	private HashMap<Variable, String> lockTable; // 
+	private HashMap<Variable, HashMap<Transaction, String>> lockTable; // variable(transaction, lockType)
 	
 	protected Site(int index) {
 		variable = new HashMap<>();
 		isUp = true;
 		this.siteIndex = index;
+		lockTable = new HashMap<>();
 		
 		// put all variables to this site along with exist
 		for (int i = 1; i <= 20; i++) {

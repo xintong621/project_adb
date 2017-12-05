@@ -8,6 +8,8 @@ public class Main {
 		BufferedReader br = new BufferedReader(new FileReader("testcase/test1.txt"));
 		String line = null;
 		TM tm = new TM();
+		DM dm = new DM();
+
 		while((line = br.readLine()) != null) {
 			String[] lineSplit = line.split("\\(");
 			String action = lineSplit[0];

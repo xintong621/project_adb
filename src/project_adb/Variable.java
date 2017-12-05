@@ -18,5 +18,6 @@ public class Variable {
 	protected Variable(int index) {
 		this.index = index;
 		this.value = index*10;
+		this.variableID = "x" + index;
 	}
 }

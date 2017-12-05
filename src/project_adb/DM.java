@@ -9,10 +9,14 @@ public class DM {
 	
 	protected DM() {
 		database = new ArrayList<Site>();
+		for (int i = 1; i <= 10; i++) {
+			Site s = new Site(i);
+			database.add(s);
+		}
 	}
 	
 	protected static void setWriteLock(Transaction transaction, String variable, String lockType) {
-		// fillin locktalbe
+		// filling locktalbe
 	}
 	
 	protected static void setReadLock(String variable) {
