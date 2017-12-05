@@ -9,7 +9,9 @@ public class Main {
 		String line = null;
 		TM tm = new TM();
 		DM dm = new DM();
-
+		
+		dm.dump(); // test dump();
+		
 		while((line = br.readLine()) != null) {
 			String[] lineSplit = line.split("\\(");
 			String action = lineSplit[0];

@@ -33,28 +33,30 @@ public class DM {
 		return false;
 	}
 	
-	protected static Variable readValue(int SiteNum, String var) {
-		Variable v;
-		Site s = database.get(SiteNum - 1);
-		v = s.getVariable(var);
-		return v;
+	protected static Variable readVariable(int SiteIndex, String var) {	
+		Site s = database.get(SiteIndex - 1);
+		return s.getVariable(var);
 	}
 	
 	protected static void dump() {
 		//print all information in all site
 		for (Site s : database) {
+			
 			if (s.isUp()) {
-				System.out.println("Site number: " + s.getSiteIndex());
+				System.out.println("Site " + s.getSiteIndex());
+				
 				for (int i = 1; i <= 20; i++) {
 					String var = "x" + Integer.toString(i);
+					
 					if (s.isVariableExists(var)) {
-						Variable variable = readValue(s.getSiteIndex(), var);
-						System.out.println("Variable: "
-								+ variable.getVariableID() + ", Data: "
-								+ variable.getValue());
+						Variable variable = readVariable(s.getSiteIndex(), var);
+						System.out.print(variable.getVariableID() + ": "
+									   + variable.getValue() + "   ");
 					}
 				}
 			}
+			
+			System.out.println();
 		}
 	}
 	protected static void dump(int siteNum) {
