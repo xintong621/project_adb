@@ -63,7 +63,26 @@ public class DM {
 	
 	protected static void dump(int siteIndex) {
 		//print all information in this site
-	
+		for (Site s : database) {
+			if (s.getSiteIndex() == siteIndex) {
+				
+				if (!s.isUp())
+					System.err.println("The site " + siteIndex + " is down.");
+				else {
+					System.out.println("Site " + s.getSiteIndex());
+					
+					for (int i = 1; i <= 20; i++) {
+						String var = "x" + Integer.toString(i);
+						
+						if (s.isVariableExists(var)) {
+							Variable variable = readVariable(s.getSiteIndex(), var);
+							System.out.print(variable.getVariableID() + ": "
+										   + variable.getValue() + "   ");
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	protected static void dump(String variable) {
