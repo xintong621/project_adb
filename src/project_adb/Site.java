@@ -13,7 +13,7 @@ public class Site {
 		variableList = new HashMap<>();
 		isUp = true;
 		this.siteIndex = index;
-		lockTable = new HashMap<>();
+		lockTable = new HashMap<Variable, HashMap<Transaction, String>>();
 		
 		// put all variables to this site along with exist
 		for (int i = 1; i <= 20; i++) {
@@ -28,12 +28,26 @@ public class Site {
 				variableList.put(var, false);
 				//isReady.put(var.getVariableID(), false);
 			}
-			//locktable.put(var, new HashMap<Transaction, Lock>());
+			lockTable.put(var, new HashMap<Transaction, String>());
 		}
 	}
 	
 	public int getSiteIndex() {
 		return siteIndex;
+	}
+	
+	public void lockVariable(String variableID, Transaction transaction, String lockType) {
+		if(transaction.getType().equals("RO")) {
+			
+		} else {
+			for (Variable v : lockTable.keySet()) {
+				if(v.getVariableID().equals(variableID)) {
+					HashMap<Transaction, String> value = new HashMap<Transaction, String>();
+					value.put(transaction, lockType);
+					lockTable.put(v, value);
+				} 
+			}
+		}
 	}
 	
 	protected Variable getVariable(String varID) {

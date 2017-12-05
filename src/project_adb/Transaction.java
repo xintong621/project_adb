@@ -25,4 +25,8 @@ public class Transaction {
 	protected long getTimeStamp() {
 		return timeStamp;
 	}
+	
+	protected String getType() {
+		return transactionType;
+	}
 }

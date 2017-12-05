@@ -10,7 +10,7 @@ public class Main {
 		TM tm = new TM();
 		DM dm = new DM();
 		
-		dm.dump(2); // test dump();
+		dm.dump(); // test dump();
 		
 		while((line = br.readLine()) != null) {
 			String[] lineSplit = line.split("\\(");
