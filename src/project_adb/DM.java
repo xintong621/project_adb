@@ -5,7 +5,6 @@ import java.util.List;
 
 
 
-
 public class DM {
 	
 	protected static List<Site> database;
@@ -19,7 +18,7 @@ public class DM {
 	}
 	
 	protected static void setWriteLock(Transaction transaction, String variable, String lockType) {
-		// filling locktable
+		// filling locktalbe
 	}
 	
 	protected static void setReadLock(String variable) {
@@ -60,10 +59,15 @@ public class DM {
 			System.out.println();
 		}
 	}
+<<<<<<< HEAD
 	
 	protected static void dump(int siteIndex) {
 		//print all information in this site
 	
+=======
+	protected static void dump(int siteNum) {
+		//print all information in this site
+>>>>>>> parent of b6c2d29... add dump(int index) in DM.java
 	}
 	
 	protected static void dump(String variable) {
