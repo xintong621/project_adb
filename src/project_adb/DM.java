@@ -17,19 +17,29 @@ public class DM {
 		}
 	}
 	
-	protected static void setWriteLock(Transaction transaction, String variable, String lockType) {
+	protected static void setWriteLock(Transaction transaction, String variableID, String lockType) {
 		// filling locktalbe
+		for(Site s : database) {
+			if(s.isUp() && s.isVariableExists(variableID)) {
+				s.lockVariable(variableID, transaction, lockType); // add lock to locktable
+			}
+		}
 	}
 	
 	protected static void setReadLock(String variable) {
 		
 	}
 	
-	protected static boolean checkWriteLock(String variable) {
+	protected static boolean checkWriteLock(String variableID) {
+		for(Site s : database) {
+			if(s.isUp() && s.isVariableExists(variableID)) {
+				boolean state = s.checkLockState(variableID);
+			}
+		}
 		return false;
 	}
 	
-	protected static boolean checkReadLock(String variable) {
+	protected static boolean checkReadLock(String variableID) {
 		return false;
 	}
 	
@@ -59,17 +69,9 @@ public class DM {
 			System.out.println();
 		}
 	}
-<<<<<<< HEAD
-	
-	protected static void dump(int siteIndex) {
-		//print all information in this site
-	
-=======
 	protected static void dump(int siteNum) {
 		//print all information in this site
->>>>>>> parent of b6c2d29... add dump(int index) in DM.java
 	}
-	
 	protected static void dump(String variable) {
 		//print all information with this variable
 	}

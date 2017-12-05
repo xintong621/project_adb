@@ -8,7 +8,7 @@ public class Site {
 	private boolean isUp; // All sites are up in initial state
 	private HashMap<Variable, Boolean> variableList; // Boolean ====>> exist
 	private HashMap<Variable, HashMap<Transaction, String>> lockTable; // variable(transaction, lockType)
-	
+	//lockTable could divided into readLtable and writeLtable
 	protected Site(int index) {
 		variableList = new HashMap<>();
 		isUp = true;
@@ -44,27 +44,31 @@ public class Site {
 				if(v.getVariableID().equals(variableID)) {
 					HashMap<Transaction, String> value = new HashMap<Transaction, String>();
 					value.put(transaction, lockType);
-					lockTable.put(v, value);
+					lockTable.get(v).putAll(value);
 				} 
 			}
 		}
 	}
 	
-	protected Variable getVariable(String varID) {
+	protected Variable getVariable(String variableID) {
 		for (Variable v : variableList.keySet()) {
-			if (varID.equals(v.getVariableID()))
+			if (variableID.equals(v.getVariableID()))
 				return v;
 		}
 		return null;
 	}
 	
-	protected boolean isVariableExists(String var) {
+	protected boolean isVariableExists(String variableID) {
 		for (Variable v : variableList.keySet()) {
-			if (var.equals(v.getVariableID())) {
+			if (variableID.equals(v.getVariableID())) {
 				boolean b = variableList.get(v);
 				return b;
 			}
 		}
+		return false;
+	}
+	
+	protected boolean checkLockState(String variableID) {
 		return false;
 	}
 	
