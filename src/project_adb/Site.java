@@ -1,7 +1,7 @@
 package project_adb;
 
 import java.util.HashMap;
-
+import java.util.Iterator;
 
 public class Site {
 	private int siteIndex;
@@ -68,8 +68,55 @@ public class Site {
 		return false;
 	}
 	
+	protected boolean isVariableLocked(String variableID) {
+		boolean bool = false;
+		for (Variable v : lockTable.keySet()) {
+			if (variableID.equals(v.getVariableID()))
+				if (lockTable.get(v) != null)
+					bool = true;
+		}
+		return bool;
+	}
+	
 	protected boolean checkLockState(String variableID) {
-		return false;
+		boolean result = false;
+		
+		boolean isLocked = false;
+		
+		for (Variable v : lockTable.keySet()) {
+			if (variableID.equals(v.getVariableID())){
+				if (lockTable.get(v) != null){
+					isLocked = true;
+				}
+			}
+		}
+		
+		String lockType = "";
+		
+		for (Variable v : lockTable.keySet()) {
+			if (variableID.equals(v.getVariableID()) && variableList.get(v)) {
+				if (!lockTable.get(v).isEmpty()) {
+					
+					Iterator<String> locks = lockTable.get(v).values().iterator();
+					
+					while (locks.hasNext()) {
+						String tempType = locks.next();
+						if (tempType.equals("RL") || tempType.equals("WL")){
+							lockType= tempType;
+						}
+					}
+				}
+			}
+		}
+		
+	
+		if (isLocked && (lockType.equals("RL")||lockType.equals("WL"))) {
+			result = true;
+		}
+		
+		
+		return result;
+		
 	}
 	
 	protected boolean isUp(){

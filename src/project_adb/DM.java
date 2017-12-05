@@ -33,7 +33,7 @@ public class DM {
 	protected static boolean checkWriteLock(String variableID) {
 		for(Site s : database) {
 			if(s.isUp() && s.isVariableExists(variableID)) {
-				boolean state = s.checkLockState(variableID);
+				boolean lockState = s.checkLockState(variableID);
 			}
 		}
 		return false;
