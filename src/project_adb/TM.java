@@ -87,11 +87,11 @@ public class TM {
 	}
 	
 	public void dump() {
-		
+		DM.dump();
 	}
 	
 	public void dump(int siteNum) {
-		
+		DM.dump(siteNum);
 	}
 	
 	public void dump(String variable) {

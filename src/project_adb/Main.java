@@ -10,8 +10,6 @@ public class Main {
 		TM tm = new TM();
 		DM dm = new DM();
 		
-		dm.dump(2); // test dump();
-		
 		while((line = br.readLine()) != null) {
 			String[] lineSplit = line.split("\\(");
 			String action = lineSplit[0];
@@ -32,10 +30,17 @@ public class Main {
 				tm.write(transaction, onChangeVariable, onChangeValue);
 			}
 			else if(action.equals("R")) {
-				
+
 			}
 			else if(action.equals("dump")) {
-				
+				String content;
+				if(lineSplit[1].equals(")")) {
+					tm.dump();
+				} else if((content = lineSplit[1].split("\\)")[0]).matches("[0-9]+")) {
+					tm.dump(Integer.parseInt(content));
+				} else {
+					tm.dump(lineSplit[1].split("\\)")[0]);
+				}
 			}
 			else if(action.equals("fail")) {
 				
