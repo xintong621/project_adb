@@ -1,16 +1,17 @@
 package project_adb;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 public class Site {
 	private int siteIndex;
 	private boolean isUp; // All sites are up in initial state
-	private HashMap<Variable, Boolean> variableList; // Boolean ====>> exist
+	private HashSet<Variable> variableList; // Boolean ====>> exist
 	private HashMap<Variable, HashMap<Transaction, String>> lockTable; // variable(transaction, lockType)
 	//lockTable could divided into readLtable and writeLtable
 	protected Site(int index) {
-		variableList = new HashMap<>();
+		variableList = new HashSet<>();
 		isUp = true;
 		this.siteIndex = index;
 		lockTable = new HashMap<Variable, HashMap<Transaction, String>>();
@@ -19,14 +20,11 @@ public class Site {
 		for (int i = 1; i <= 20; i++) {
 			Variable var = new Variable(i);
 			if (i % 2 == 0) {
-				variableList.put(var, true);
+				variableList.add(var);
 				//isReady.put(var.getVariableID(), true);
 			} else if (i % 10 + 1== siteIndex) {
-				variableList.put(var, true);
+				variableList.add(var);
 				//isReady.put(var.getVariableID(), true);
-			} else {
-				variableList.put(var, false);
-				//isReady.put(var.getVariableID(), false);
 			}
 			lockTable.put(var, new HashMap<Transaction, String>());
 		}
@@ -36,6 +34,9 @@ public class Site {
 		return siteIndex;
 	}
 	
+	public boolean getSiteStatus() {
+		return true;
+	}
 	public void lockVariable(String variableID, Transaction transaction, String lockType) {
 		if(transaction.getType().equals("RO")) {
 			
@@ -51,7 +52,7 @@ public class Site {
 	}
 	
 	protected Variable getVariable(String variableID) {
-		for (Variable v : variableList.keySet()) {
+		for (Variable v : variableList) {
 			if (variableID.equals(v.getVariableID()))
 				return v;
 		}
@@ -59,9 +60,9 @@ public class Site {
 	}
 	
 	protected boolean isVariableExists(String variableID) {
-		for (Variable v : variableList.keySet()) {
+		for (Variable v : variableList) {
 			if (variableID.equals(v.getVariableID())) {
-				boolean b = variableList.get(v);
+				boolean b = variableList.contains(v);
 				return b;
 			}
 		}
@@ -85,7 +86,7 @@ public class Site {
 		String lockType = "";
 		
 		for (Variable v : lockTable.keySet()) {
-			if (variableID.equals(v.getVariableID()) && variableList.get(v)) {
+			if (variableID.equals(v.getVariableID()) && variableList.contains(v)) {
 				if (!lockTable.get(v).isEmpty()) {
 					
 					Iterator<String> locks = lockTable.get(v).values().iterator();
@@ -115,7 +116,7 @@ public class Site {
 	}
 	
 	protected void changeVariableValue(String variableID, int value) {
-		for(Variable v:variableList.keySet()){
+		for(Variable v:variableList){
 			if(v.getVariableID().equals(variableID)) {
 				v.setValue(value);
 			}

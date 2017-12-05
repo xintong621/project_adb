@@ -43,6 +43,8 @@ public class TM {
 		if(transaction.getType().equals("RO")) {
 			return transaction.tempTable.get(onReadVariableID);
 		} else {
+			// transaction type of RW
+			// add readLock
 			return -1;
 		}
 	}
@@ -75,14 +77,14 @@ public class TM {
 				System.out.println("transaction " + transaction.getTransactionID() + " has changed variable " + onChangeVariable + " to " + onChangeValue
 						+ " in local copy");
 			} else {
-				// deadlock detection
-				// kill youngest
-				if(!waitingAction.containsKey(transaction)) {
-					waitingAction.put(transaction, onChangeVariable);
-					System.out.println("Write action " + onChangeVariable + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+				if(deadLockDetection() == false){
+					if(!waitingAction.containsKey(transaction)) {
+						waitingAction.put(transaction, onChangeVariable);
+						System.out.println("Write action " + onChangeVariable + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+					}
+				} else {
+					// kill youngest
 				}
-				// add transaction to waiting list
-				// add to waitingTransaction
 			}
 		} else {
 			if(!waitingAction.containsKey(transaction)) {
@@ -92,6 +94,9 @@ public class TM {
 		}
 	}
 	
+	public boolean deadLockDetection() {
+		return false;
+	}
 	
 	public void end(String transactionID) {
 		// for(transaction.tempTable(variable))
