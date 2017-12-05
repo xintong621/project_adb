@@ -18,6 +18,10 @@ public class Transaction {
 		this.timeStamp = System.currentTimeMillis(); // record the current timestamp
 	}
 	
+	protected String getTransactionID() {
+		return transactionID;
+	}
+	
 	protected long getTimeStamp() {
 		return timeStamp;
 	}

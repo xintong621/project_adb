@@ -36,14 +36,25 @@ public class TM {
 		 * */
 	}
 	
-	public void write(String transactionID, String onChangeVariable, Integer onChangeValue) {
+	public Transaction getTransaction(String transactionID) {
+		for(Transaction tr : runningTransaction) {
+			if(tr.getTransactionID().equals(transactionID)) {
+				return tr;
+			} else {
+				// print exception
+			}
+		}
+		return null;
+	}
+	
+	public void write(Transaction transaction, String onChangeVariable, Integer onChangeValue) {
 		/*
 		 * iswritelocked == false
 		 * execute write action(acquire writelock, write to all copy)
 		 * */
 		if(DM.checkWriteLock(onChangeVariable) == false) {
 			// execute write action
-			DM.setWriteLock(onChangeVariable);
+			DM.setWriteLock(transaction, onChangeVariable, "WL");
 			// write to tempTable
 		} else {
 			// add to waitingTransaction

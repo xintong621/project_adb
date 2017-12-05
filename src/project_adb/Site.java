@@ -2,10 +2,15 @@ package project_adb;
 
 import java.util.HashMap;
 
+class Lock {
+	
+}
+
 public class Site {
 	private int siteIndex;
 	private boolean isUp; // All sites are up in initial state
 	private HashMap<Variable, Boolean> variable; // Boolean ====>> exist
+	private HashMap<Variable, String> lockTable; // 
 	
 	protected Site(int index) {
 		variable = new HashMap<>();

@@ -11,8 +11,8 @@ public class DM {
 		database = new ArrayList<Site>();
 	}
 	
-	protected static void setWriteLock(String variable) {
-		
+	protected static void setWriteLock(Transaction transaction, String variable, String lockType) {
+		// fillin locktalbe
 	}
 	
 	protected static void setReadLock(String variable) {
