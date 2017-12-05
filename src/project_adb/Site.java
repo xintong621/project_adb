@@ -69,6 +69,7 @@ public class Site {
 	}
 	
 	protected boolean checkLockState(String variableID) {
+		//return true if readlocked || writelocked
 		boolean result = false;
 		
 		boolean isLocked = false;
@@ -100,7 +101,7 @@ public class Site {
 		}
 		
 	
-		if (isLocked && (lockType.equals("RL")||lockType.equals("WL"))) {
+		if (isLocked && (lockType.equals("RL") || lockType.equals("WL"))) {
 			result = true;
 		}
 		

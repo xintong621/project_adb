@@ -17,6 +17,15 @@ public class DM {
 		}
 	}
 	
+	protected static boolean checkWriteState(String variableID) {
+		// true condition:
+		// 1. at least 1 site which contains this variable is up
+		for(Site s : database) {
+			if((s.isUp() == true) && (s.isVariableExists(variableID) == true)) return true;
+		}
+		return false;
+	}
+	
 	protected static void setWriteLock(Transaction transaction, String variableID, String lockType) {
 		// filling locktalbe
 		for(Site s : database) {

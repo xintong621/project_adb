@@ -7,26 +7,31 @@
 package project_adb;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TM {
 	private List<Transaction> runningTransaction;
-	private List<Transaction> waitingTransaction;
+	private HashMap<Transaction, String> waitingAction;
 	
 	protected TM() {
 		runningTransaction = new ArrayList<Transaction>();
-		waitingTransaction = new ArrayList<Transaction>();
+		waitingAction = new HashMap<Transaction, String>();
 	}
 	
-	public void begin(String transactionID, String transactionType) {
+	public Transaction begin(String transactionID, String transactionType) {
 		/*
 		 * create new transaction
 		 * add to running
 		 * */
-		System.out.println(transactionID + " of type " + transactionType + " successfully initialized");
 		Transaction transaction = new Transaction(transactionID, transactionType);
+		if(transaction.getType().equals("RO")) {
+			
+		}
+		System.out.println(transactionID + " of type " + transactionType + " successfully initialized");
 		runningTransaction.add(transaction);
-		// cornercase: RO
+
+		return transaction;
 	}
 	
 	public void read() {
@@ -48,19 +53,33 @@ public class TM {
 	
 	public void write(Transaction transaction, String onChangeVariable, Integer onChangeValue) {
 		/*
+		 * At least one site contains this variable is up
 		 * iswritelocked == false
 		 * execute write action(acquire writelock, write to all copy)
 		 * */
-		if(DM.checkWriteLock(onChangeVariable) == false) {
-			// execute write action
-			DM.setWriteLock(transaction, onChangeVariable, "WL");
-			// write to tempTable
-			transaction.tempTable.put(onChangeVariable, onChangeValue);
-			System.out.println("transaction " + transaction.getTransactionID() + " has changed variable " + onChangeVariable + " to " + onChangeValue
-					+ " in local copy");
+		if(DM.checkWriteState(onChangeVariable) == true) {
+			if(DM.checkWriteLock(onChangeVariable) == false) {
+				// execute write action
+				DM.setWriteLock(transaction, onChangeVariable, "WL");
+				// write to tempTable
+				transaction.tempTable.put(onChangeVariable, onChangeValue);
+				System.out.println("transaction " + transaction.getTransactionID() + " has changed variable " + onChangeVariable + " to " + onChangeValue
+						+ " in local copy");
+			} else {
+				// deadlock detection
+				// kill youngest
+				if(!waitingAction.containsKey(transaction)) {
+					waitingAction.put(transaction, onChangeVariable);
+					System.out.println("Write action " + onChangeVariable + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+				}
+				// add transaction to waiting list
+				// add to waitingTransaction
+			}
 		} else {
-			// add to waitingTransaction
-			// if circle then abort
+			if(!waitingAction.containsKey(transaction)) {
+				waitingAction.put(transaction, onChangeVariable);
+				System.out.println("Write action " + onChangeVariable + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+			}
 		}
 	}
 	
