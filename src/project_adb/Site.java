@@ -36,6 +36,18 @@ public class Site {
 		return siteIndex;
 	}
 	
+	public void lockVariable(String variableID, Transaction transaction, String lockType) {
+		if(transaction.getType().equals("RO")) {
+			
+		} else {
+			for (Variable v : lockTable.keySet()) {
+				if(v.getVariableID().equals(variableID)) {
+					// add lock
+				} 
+			}
+		}
+	}
+	
 	protected Variable getVariable(String varID) {
 		for (Variable v : variableList.keySet()) {
 			if (varID.equals(v.getVariableID()))

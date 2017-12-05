@@ -17,8 +17,13 @@ public class DM {
 		}
 	}
 	
-	protected static void setWriteLock(Transaction transaction, String variable, String lockType) {
+	protected static void setWriteLock(Transaction transaction, String variableID, String lockType) {
 		// filling locktalbe
+		for(Site s : database) {
+			if(s.isUp() && s.isVariableExists(variableID)) {
+				s.lockVariable(variableID, transaction, lockType); // add lock to locktable
+			}
+		}
 	}
 	
 	protected static void setReadLock(String variable) {
