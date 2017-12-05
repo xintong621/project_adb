@@ -34,6 +34,7 @@ public class DM {
 		for(Site s : database) {
 			if(s.isUp() && s.isVariableExists(variableID)) {
 				boolean lockState = s.checkLockState(variableID);
+				return lockState;
 			}
 		}
 		return false;

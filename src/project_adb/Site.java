@@ -68,16 +68,6 @@ public class Site {
 		return false;
 	}
 	
-	protected boolean isVariableLocked(String variableID) {
-		boolean bool = false;
-		for (Variable v : lockTable.keySet()) {
-			if (variableID.equals(v.getVariableID()))
-				if (lockTable.get(v) != null)
-					bool = true;
-		}
-		return bool;
-	}
-	
 	protected boolean checkLockState(String variableID) {
 		boolean result = false;
 		

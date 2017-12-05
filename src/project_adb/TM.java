@@ -23,8 +23,7 @@ public class TM {
 		 * create new transaction
 		 * add to running
 		 * */
-		System.out.print(transactionID + " ");
-		System.out.println(transactionType);
+		System.out.println(transactionID + " of type " + transactionType + " successfully initialized");
 		Transaction transaction = new Transaction(transactionID, transactionType);
 		runningTransaction.add(transaction);
 		// cornercase: RO
@@ -56,6 +55,9 @@ public class TM {
 			// execute write action
 			DM.setWriteLock(transaction, onChangeVariable, "WL");
 			// write to tempTable
+			transaction.tempTable.put(onChangeVariable, onChangeValue);
+			System.out.println("transaction " + transaction.getTransactionID() + " has changed variable " + onChangeVariable + " to " + onChangeValue
+					+ " in local copy");
 		} else {
 			// add to waitingTransaction
 			// if circle then abort
