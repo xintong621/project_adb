@@ -27,6 +27,7 @@ public class TM {
 		System.out.println(transactionType);
 		Transaction transaction = new Transaction(transactionID, transactionType);
 		runningTransaction.add(transaction);
+		// cornercase: RO
 	}
 	
 	public void read() {
@@ -35,18 +36,54 @@ public class TM {
 		 * */
 	}
 	
-	public boolean iswritelocked() {
-		return false;
-	}
-	
 	public void write(String transactionID, String onChangeVariable, Integer onChangeValue) {
 		/*
 		 * iswritelocked == false
 		 * execute write action(acquire writelock, write to all copy)
 		 * */
+		if(DM.checkWriteLock(onChangeVariable) == false) {
+			// execute write action
+			DM.setWriteLock(onChangeVariable);
+			// write to tempTable
+		} else {
+			// add to waitingTransaction
+			// if circle then abort
+		}
 	}
 	
-	public void end() {
+	public void updateAllSites(String variable) {
+		// update all sites with temptable
+	}
+	
+	public void end(Transaction transactionID) {
+		// for(transaction.tempTable(variable))
+		// updateAllSites(variable);
+	}
+	
+	public void terminate(Transaction transactionID) {
+		// runningTransaction.remove this transaction
+		// waitingTransaction.remove
+		// clear temp table
+		// unlock all locks
+	}
+	
+	public void abort() {
+
+	}
+	
+	public void fail() {
+		
+	}
+	
+	public void dump() {
+		
+	}
+	
+	public void dump(int siteNum) {
+		
+	}
+	
+	public void dump(String variable) {
 		
 	}
 }
