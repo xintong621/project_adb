@@ -26,8 +26,8 @@ public class Main {
 				String transactionID = actionInfo[0];
 				String onChangeVariable = actionInfo[1];
 				int onChangeValue = Integer.parseInt(actionInfo[2].split("\\)")[0]);
-				Transaction transaction = tm.getTransaction(transactionID);
-				tm.write(transaction, onChangeVariable, onChangeValue);
+				
+				tm.write(transactionID, onChangeVariable, onChangeValue);
 			}
 			else if(action.equals("R")) {
 
@@ -49,10 +49,9 @@ public class Main {
 				
 			}
 			else if(action.equals("end")) {
-				
+				String transactionID = lineSplit[1].split("\\)")[0];
+				tm.end(transactionID);
 			}
-			
-			
 		}
 	}
 	public static void main(String[] args) throws IOException {

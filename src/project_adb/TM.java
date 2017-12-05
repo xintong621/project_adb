@@ -8,6 +8,7 @@ package project_adb;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 
 public class TM {
@@ -51,12 +52,13 @@ public class TM {
 		return null;
 	}
 	
-	public void write(Transaction transaction, String onChangeVariable, Integer onChangeValue) {
+	public void write(String transactionID, String onChangeVariable, Integer onChangeValue) {
 		/*
 		 * At least one site contains this variable is up
 		 * iswritelocked == false
 		 * execute write action(acquire writelock, write to all copy)
 		 * */
+		Transaction transaction = getTransaction(transactionID);
 		if(DM.checkWriteState(onChangeVariable) == true) {
 			if(DM.checkWriteLock(onChangeVariable) == false) {
 				// execute write action
@@ -87,16 +89,36 @@ public class TM {
 		// update all sites with temptable
 	}
 	
-	public void end(Transaction transactionID) {
+	public void end(String transactionID) {
 		// for(transaction.tempTable(variable))
 		// updateAllSites(variable);
+		Transaction transaction = getTransaction(transactionID);
+		if(transaction.getType().equals("RW")) {
+			for(String changedVariableID : transaction.tempTable.keySet()) {
+				int changedValue = transaction.tempTable.get(changedVariableID);
+				DM.updateDatabase(changedVariableID, changedValue);
+				System.out.println("Transaction " + transaction.getTransactionID() + ": changed the value of " + changedVariableID + " to "
+				+ changedValue + " in database.");
+
+			}
+		}
+		
+		System.out.println("Transaction " + transaction.getTransactionID() + " has ended.");
+		terminate(transaction);
 	}
 	
-	public void terminate(Transaction transactionID) {
-		// runningTransaction.remove this transaction
-		// waitingTransaction.remove
+	public void terminate(Transaction transaction) {
+		// clear transactionQueue
+		if(runningTransaction.contains(transaction)) {
+			runningTransaction.remove(transaction);
+		}
+		if(waitingAction.containsKey(transaction)) {
+			waitingAction.remove(transaction);
+		}
 		// clear temp table
+		transaction.tempTable.clear();	
 		// unlock all locks
+		// iterate all locks of transaction and set free
 	}
 	
 	public void abort() {

@@ -110,8 +110,16 @@ public class Site {
 		
 	}
 	
-	protected boolean isUp(){
+	protected boolean isUp() {
 		return isUp;
+	}
+	
+	protected void changeVariableValue(String variableID, int value) {
+		for(Variable v:variableList.keySet()){
+			if(v.getVariableID().equals(variableID)) {
+				v.setValue(value);
+			}
+		}
 	}
 	
 	protected void failSite() {

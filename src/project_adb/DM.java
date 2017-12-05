@@ -58,6 +58,16 @@ public class DM {
 		return s.getVariable(var);
 	}
 	
+	protected static void updateDatabase(String changedVariableID, int changedValue) {
+		for(Site s : DM.database) {
+			if(s.isUp()) {
+				if(s.isVariableExists(changedVariableID)) {
+					s.changeVariableValue(changedVariableID, changedValue);
+				}
+			}
+		}
+	}
+	
 	protected static void dump() {
 		//print all information in all site
 		for (Site s : database) {

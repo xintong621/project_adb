@@ -20,4 +20,8 @@ public class Variable {
 		this.value = index*10;
 		this.variableID = "x" + index;
 	}
+	
+	protected void setValue(int value) {
+		this.value = value;
+	}
 }
