@@ -55,11 +55,7 @@ public class DM {
 			}
 		}
 	}
-	
-	
-	protected static void setReadLock(String variable) {
-		
-	}
+
 // below two function could merge to one
 	protected static boolean checkWriteLock(String variableID) {
 		for(Site s : database) {

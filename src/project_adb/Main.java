@@ -33,7 +33,7 @@ public class Main {
 				String[] actionInfo = lineSplit[1].split(",");
 				String transactionID = actionInfo[0];
 				String onReadVariableID = actionInfo[1].split("\\)")[0];
-				System.out.println(transactionID + " : " + onReadVariableID + " : " + tm.read(transactionID, onReadVariableID));
+				tm.read(transactionID, onReadVariableID);
 			}
 			else if(action.equals("dump")) {
 				String content;
@@ -46,12 +46,13 @@ public class Main {
 				}
 			}
 			else if(action.equals("fail")) {
-				
+				// wait for implement
 			}
 			else if(action.equals("recover")) {
-				
+				// wait for implement
 			}
 			else if(action.equals("end")) {
+				// only related to write action
 				String transactionID = lineSplit[1].split("\\)")[0];
 				tm.end(transactionID);
 			}

@@ -35,34 +35,45 @@ public class TM {
 		return transaction;
 	}
 	
-	public int read(String transactionID, String onReadVariableID) {
+	public void read(String transactionID, String onReadVariableID) {
 		/*
 		 * execute read action(consistency, acquire readlock)
 		 * */
 		Transaction transaction = getTransaction(transactionID);
 		if(transaction.getType().equals("RO")) {
-			return transaction.tempTable.get(onReadVariableID);
+			System.out.println(transactionID + " : " + onReadVariableID + " : " + transaction.tempTable.get(onReadVariableID));
 		} else { // transaction type of RW
 			// add readLock
 			if(DM.checkReadState(onReadVariableID) == true) {
 				if(DM.checkWriteLock(onReadVariableID) == false) {
-					DM.setLock(transaction, onReadVariableID, "RL"); // add readlock
-					// DM.readVariable(0, onReadVariable);
-					// read
-					// if all sites down?????
-					
+					if(DM.checkReadLock(onReadVariableID) == false) {
+						DM.setLock(transaction, onReadVariableID, "RL"); // add readlock
+					}
+					for(Site s : DM.database) {
+						if(s.isUp() && s.isVariableExists(onReadVariableID)) {
+							Variable readItem = DM.readVariable(s.getSiteIndex(), onReadVariableID);
+							System.out.println(transactionID + " : " + onReadVariableID + " : " + readItem.getValue());
+						}
+					}
 				} else {
 					// all sites contains this variable has been write locked
+					// add to waiting list
 					if(deadLockDetection() == false) {
-						// add to waiting queue
+						if(!waitingAction.containsKey(transaction)) {
+							waitingAction.put(transaction, onReadVariableID);
+							System.out.println("Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+						}
 					} else {
-						// kill youngest
+						killYoungest(); // kill youngest
 					}
 				}
 			} else {
-				// add to waiting queue
+				if(!waitingAction.containsKey(transaction)) {
+					waitingAction.put(transaction, onReadVariableID);
+					System.out.println("Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+				}
 			}
-			return -1;
+			return;
 		}
 	}
 	
@@ -100,7 +111,7 @@ public class TM {
 						System.out.println("Write action " + onChangeVariable + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
 					}
 				} else {
-					// kill youngest
+					killYoungest();
 				}
 			}
 		} else {
@@ -113,6 +124,10 @@ public class TM {
 	
 	public boolean deadLockDetection() {
 		return false;
+	}
+	
+	public void killYoungest() {
+		// compare timestamp of all transaction
 	}
 	
 	public void end(String transactionID) {
@@ -152,10 +167,14 @@ public class TM {
 
 	}
 	
-	public void fail() {
+	public void fail(int siteNum) {
 		
 	}
 	
+	public void recover(int siteNum) {
+		// empty waitlist
+	}
+
 	public void dump() {
 		DM.dump();
 	}
