@@ -79,6 +79,21 @@ public class Site {
 		}
 		return null;
 	}
+
+	protected void clearlockTable() {
+		lockTable.clear();
+	}
+	
+	protected boolean ifSiteContainsTransaction(Transaction transaction) {
+		HashMap<Transaction, String> transactionInfoR = new HashMap<>();
+		HashMap<Transaction, String> transactionInfoW = new HashMap<>();
+		transactionInfoR.put(transaction, "RL");
+		transactionInfoW.put(transaction, "WL");
+		if(lockTable.containsValue(transactionInfoR) || lockTable.containsValue(transactionInfoW)) {
+			return true;
+		}
+		return false;
+	}
 	
 	protected boolean isVariableExists(String variableID) {
 		for (Variable v : variableList) {

@@ -46,7 +46,8 @@ public class Main {
 				}
 			}
 			else if(action.equals("fail")) {
-				// wait for implement
+				String failSiteID = lineSplit[1].split("\\)")[0];
+				tm.fail(failSiteID);
 			}
 			else if(action.equals("recover")) {
 				// wait for implement

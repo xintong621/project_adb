@@ -226,22 +226,32 @@ public class TM {
 			String variableID = waitingAction.get(tr).get(0);
 			String actionInfo = waitingAction.get(tr).get(1);
 			String transactionID = tr.getTransactionID();
-			switch (actionInfo) {
-			case "R":
+			if(actionInfo.equals("R")) {
 				read(transactionID, variableID);
-				break;
-			case "W":
+			} else {
 				String valueS = waitingAction.get(tr).get(2);
 				int value = Integer.parseInt(valueS);
 				write(transactionID, variableID, value);
-				break;
 			}
 			waitingAction.remove(tr);
 		}
 	}
 
-	public void fail(int siteNum) {
+	public void fail(String siteNum) {
 		// transaction abort
+		int siteID = Integer.parseInt(siteNum);
+		DM.fail(siteID);
+		for(Site s : DM.database) {
+			if(s.getSiteIndex() == siteID) {
+				for(Transaction transaction : runningTransaction) {
+					if(s.ifSiteContainsTransaction(transaction)) {
+						System.out.println("" + transaction.getTransactionID() + " has been aborted");
+						terminate(transaction);
+					}
+				}
+			}
+		}
+		
 	}
 	
 	public void recover(int siteNum) {

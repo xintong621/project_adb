@@ -3,8 +3,6 @@ package project_adb;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 public class DM {
 	
 	protected static List<Site> database;
@@ -14,6 +12,21 @@ public class DM {
 		for (int i = 1; i <= 10; i++) {
 			Site s = new Site(i);
 			database.add(s);
+		}
+	}
+	
+	protected static void fail(int siteNum) {
+		for (Site s : database) {
+			if (s.getSiteIndex() == siteNum) {
+				if (!s.isUp())
+					System.err.println("Site " + siteNum + " is already down.");
+				else {
+					s.failSite();
+					s.clearlockTable();
+					System.out.println("Site " + siteNum + " is down.");
+				}
+				break;
+			}
 		}
 	}
 	
