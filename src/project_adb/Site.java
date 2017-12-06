@@ -22,10 +22,8 @@ public class Site {
 			Variable var = new Variable(i);
 			if (i % 2 == 0) {
 				variableList.add(var);
-				//isReady.put(var.getVariableID(), true);
 			} else if (i % 10 + 1== siteIndex) {
 				variableList.add(var);
-				//isReady.put(var.getVariableID(), true);
 			}
 			lockTable.put(var, new HashMap<Transaction, String>());
 		}
@@ -82,6 +80,10 @@ public class Site {
 
 	protected void clearlockTable() {
 		lockTable.clear();
+	}
+	
+	protected void clearVariableList() {
+		variableList.clear();
 	}
 	
 	protected boolean ifSiteContainsTransaction(Transaction transaction) {
@@ -165,8 +167,13 @@ public class Site {
 	
 	protected void recover() {
 		isUp = true;
-		for(Variable v : variableList) {
-			lockTable.put(v, new HashMap<Transaction, String>());
+		
+		for (int i = 1; i <= 20; i++) {
+			Variable var = new Variable(i);
+			if (i % 10 + 1== siteIndex) {
+				variableList.add(var);
+			}
+			lockTable.put(var, new HashMap<Transaction, String>());
 		}
 	}
 }

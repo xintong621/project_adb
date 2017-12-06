@@ -23,6 +23,7 @@ public class DM {
 				else {
 					s.fail();
 					s.clearlockTable();
+					s.clearVariableList();
 					System.out.println("Site " + siteNum + " is down");
 				}
 				break;

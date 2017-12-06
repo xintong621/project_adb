@@ -69,7 +69,7 @@ public class TM {
 							if (readItem.getValue() == -1) {
 								System.out.println("Couldn't find value of " + readItem.getVariableID());
 							} else {
-								System.out.println(transactionID + " : " + onReadVariableID + " : " + readItem.getValue());
+								System.out.println(transactionID + " : " + onReadVariableID + "." + s.getSiteIndex() + " : " + readItem.getValue());
 							}
 							break;
 						}
@@ -279,6 +279,7 @@ public class TM {
 	public void fail(String siteNum) {
 		// transaction abort
 		int siteID = Integer.parseInt(siteNum);
+		boolean siteHasRunning = false;
 		for(Site s : DM.database) {
 			if(s.getSiteIndex() == siteID) {
 				for(Transaction transaction : runningTransaction) {
@@ -286,8 +287,12 @@ public class TM {
 						DM.fail(siteID);
 						System.out.println("" + transaction.getTransactionID() + " has been aborted because site " + siteID + " is down");
 						terminate(transaction);
+						siteHasRunning = true;
 						break;
 					}
+				}
+				if(siteHasRunning == false) {
+					DM.fail(siteID);
 				}
 				break;
 			}
