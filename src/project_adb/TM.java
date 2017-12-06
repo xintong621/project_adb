@@ -11,17 +11,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 public class TM {
 	private List<Transaction> runningTransaction;
-	private LinkedHashMap<Transaction, String> waitingAction;
+	private LinkedHashMap<Transaction, ArrayList<String>> waitingAction;
 	private Graph waitingGraph;
 	
 	protected TM() {
 		runningTransaction = new ArrayList<Transaction>();
-		waitingAction = new LinkedHashMap<Transaction, String>();
+		waitingAction = new LinkedHashMap<Transaction, ArrayList<String>>();
 	}
 	
 	public Transaction begin(String transactionID, String transactionType) {
@@ -57,23 +58,26 @@ public class TM {
 						if(s.isUp() && s.isVariableExists(onReadVariableID)) {
 							Variable readItem = DM.readVariable(s.getSiteIndex(), onReadVariableID);
 							System.out.println(transactionID + " : " + onReadVariableID + " : " + readItem.getValue());
+							break;
 						}
 					}
 				} else {
 					// all sites contains this variable has been write locked
 					// add to waiting list
+					if(!waitingAction.containsKey(transaction)) {
+						addToWaitingAction(onReadVariableID, "R", null, transaction);
+						System.out.println("Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+					}
 					if(deadLockDetection() == false) {
-						if(!waitingAction.containsKey(transaction)) {
-							waitingAction.put(transaction, onReadVariableID);
-							System.out.println("Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
-						}
+						
 					} else {
+						System.out.print("deadlocked, ");
 						killYoungest(); // kill youngest
 					}
 				}
 			} else {
 				if(!waitingAction.containsKey(transaction)) {
-					waitingAction.put(transaction, onReadVariableID);
+					addToWaitingAction(onReadVariableID, "R", null, transaction);
 					System.out.println("Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
 				}
 			}
@@ -92,39 +96,53 @@ public class TM {
 		return null;
 	}
 	
-	public void write(String transactionID, String onChangeVariable, Integer onChangeValue) {
+	protected void addToWaitingAction(String VariableID, String actionType, String newValue, Transaction transaction) {
+		ArrayList<String> actionInfo = new ArrayList<>();
+		if(actionType == "R") {
+			actionInfo.add(VariableID);
+			actionInfo.add("R");
+			actionInfo.add(newValue);
+		} else if(actionType == "W") {
+			actionInfo.add(VariableID);
+			actionInfo.add("W");
+			actionInfo.add(newValue);
+		}
+		waitingAction.put(transaction, actionInfo);
+	}
+	
+	public void write(String transactionID, String onChangeVariableID, Integer onChangeValue) {
 		/*
 		 * At least one site contains this variable is up
 		 * iswritelocked == false
 		 * execute write action(acquire writelock, write to all copy)
 		 * */
 		Transaction transaction = getTransaction(transactionID);
-		if(DM.checkWriteState(onChangeVariable) == true) {
-			if((DM.checkWriteLock(onChangeVariable) == false) && DM.checkReadLock(onChangeVariable) == false) {
+		if(DM.checkWriteState(onChangeVariableID) == true) {
+			if((DM.checkWriteLock(onChangeVariableID) == false) && DM.checkReadLock(onChangeVariableID) == false) {
 				// execute write action
-				DM.setLock(transaction, onChangeVariable, "WL");
+				DM.setLock(transaction, onChangeVariableID, "WL");
 
 				// write to tempTable
-				transaction.tempTable.put(onChangeVariable, onChangeValue);
-				System.out.println("transaction " + transaction.getTransactionID() + " has changed variable " + onChangeVariable + " to " + onChangeValue
+				transaction.tempTable.put(onChangeVariableID, onChangeValue);
+				System.out.println("transaction " + transaction.getTransactionID() + " has changed variable " + onChangeVariableID + " to " + onChangeValue
 						+ " in local copy");
 			} else {
 				if(!waitingAction.containsKey(transaction)) {
-					waitingAction.put(transaction, onChangeVariable);
-					System.out.println("Write action " + onChangeVariable + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+					addToWaitingAction(onChangeVariableID, "W", onChangeValue.toString(), transaction);
+					System.out.println("Write action " + onChangeVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
 				}
 				if(deadLockDetection() == false){
 					System.out.println("no deadlocked");
 				} else {
-					System.out.println("deadlocked");
+					System.out.print("deadlocked, ");
 					// remove from waitinglist
 					killYoungest();
 				}
 			}
 		} else {
 			if(!waitingAction.containsKey(transaction)) {
-				waitingAction.put(transaction, onChangeVariable);
-				System.out.println("Write action " + onChangeVariable + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+				addToWaitingAction(onChangeVariableID, "W", onChangeValue.toString(), transaction);
+				System.out.println("Write action " + onChangeVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
 			}
 		}
 	}
@@ -133,7 +151,7 @@ public class TM {
 		waitingGraph = new Graph();
 		for(Transaction tr : waitingAction.keySet()) {
 			waitingGraph.addVertices(tr.getTransactionID());
-			String variableID = waitingAction.get(tr);
+			String variableID = waitingAction.get(tr).get(0);
 			Set<Transaction> holdLockTransactionSet = new HashSet<Transaction>();
 			for(Site s : DM.database) {
 				if(s.isVariableExists(variableID)) {
@@ -151,6 +169,17 @@ public class TM {
 	
 	public void killYoungest() {
 		// compare timestamp of all transaction
+		long youngest = Long.MIN_VALUE;
+		Transaction youngestTransaction = new Transaction(null, null);
+		for(Transaction tr : waitingAction.keySet()) {
+			if (tr.getTimeStamp() > youngest) {
+				youngest = tr.getTimeStamp();
+				youngestTransaction = tr;
+			}
+		}
+		System.out.println("" + youngestTransaction.getTransactionID() + " has been aborted");
+		terminate(youngestTransaction);
+		
 	}
 	
 	public void end(String transactionID) {
@@ -166,10 +195,8 @@ public class TM {
 
 			}
 		}
-		
-		System.out.println("Transaction " + transaction.getTransactionID() + " has ended.");
-		
 		terminate(transaction);
+		System.out.println("Transaction " + transaction.getTransactionID() + " has ended.");
 	}
 	
 	public void terminate(Transaction transaction) {
@@ -183,17 +210,36 @@ public class TM {
 		// clear temp table
 		transaction.tempTable.clear();
 		// unlock all locks
-		
-		DM.unLock(transaction);
+		if(transaction.getType().equals("RW")) {
+			DM.unLock(transaction);
+		}
 
 		// iterate all locks of transaction and set free
-		// dequeueWaitingTransactions();
+		if(waitingAction.size() != 0) {
+			resumeWaitingAction();
+		}
 	}
-	
-	public void abort() {
 
+	private void resumeWaitingAction() {
+		Set<Transaction> set = new LinkedHashSet<Transaction>(waitingAction.keySet());
+		for (Transaction tr : set) {
+			String variableID = waitingAction.get(tr).get(0);
+			String actionInfo = waitingAction.get(tr).get(1);
+			String transactionID = tr.getTransactionID();
+			switch (actionInfo) {
+			case "R":
+				read(transactionID, variableID);
+				break;
+			case "W":
+				String valueS = waitingAction.get(tr).get(2);
+				int value = Integer.parseInt(valueS);
+				write(transactionID, variableID, value);
+				break;
+			}
+			waitingAction.remove(tr);
+		}
 	}
-	
+
 	public void fail(int siteNum) {
 		// transaction abort
 	}
