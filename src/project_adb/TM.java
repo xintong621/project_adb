@@ -40,14 +40,14 @@ public class TM {
 		return transaction;
 	}
 	
-	public void read(String transactionID, String onReadVariableID) {
+	public boolean read(String transactionID, String onReadVariableID) {
 		/*
 		 * execute read action(consistency, acquire readlock)
 		 * */
 		Transaction transaction = getTransaction(transactionID);
 		if(transaction == null) {
 			System.out.println("Transaction " + transactionID + " not exist");
-			return;
+			return true;
 		}
 		if(transaction.getType().equals("RO")) {
 			int readTempValue = transaction.tempTable.get(onReadVariableID);
@@ -55,6 +55,7 @@ public class TM {
 				System.out.println("Couldn't find value of " + onReadVariableID);
 			} else {
 				System.out.println(transactionID + " : " + onReadVariableID + " : " + readTempValue);
+				return true;
 			}
 		} else { // transaction type of RW
 			// add readLock
@@ -70,6 +71,7 @@ public class TM {
 								System.out.println("Couldn't find value of " + readItem.getVariableID());
 							} else {
 								System.out.println(transactionID + " : " + onReadVariableID + "." + s.getSiteIndex() + " : " + readItem.getValue());
+								return true;
 							}
 							break;
 						}
@@ -94,8 +96,8 @@ public class TM {
 					System.out.println("Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
 				}
 			}
-			return;
 		}
+		return false;
 	}
 	
 	public Transaction getTransaction(String transactionID) {
@@ -132,7 +134,7 @@ public class TM {
 		return false;
 	}
 	
-	public void write(String transactionID, String onChangeVariableID, Integer onChangeValue) {
+	public boolean write(String transactionID, String onChangeVariableID, Integer onChangeValue) {
 		/*
 		 * At least one site contains this variable is up
 		 * iswritelocked == false
@@ -141,7 +143,7 @@ public class TM {
 		Transaction transaction = getTransaction(transactionID);
 		if(transaction == null) {
 			System.out.println("Transaction " + transactionID + " not exist");
-			return;
+			return true;
 		}
 		if(DM.checkWriteState(onChangeVariableID) == true) {
 			if((DM.checkWriteLock(onChangeVariableID) == false) && DM.checkReadLock(onChangeVariableID) == false) {
@@ -152,6 +154,7 @@ public class TM {
 				transaction.tempTable.put(onChangeVariableID, onChangeValue);
 				System.out.println("transaction " + transaction.getTransactionID() + " has changed variable " + onChangeVariableID + " to " + onChangeValue
 						+ " in local copy");
+				return true;
 			} else {
 				if(!waitingAction.containsKey(transaction)) {
 					addToWaitingAction(onChangeVariableID, "W", onChangeValue.toString(), transaction);
@@ -171,6 +174,7 @@ public class TM {
 				System.out.println("Write action " + onChangeVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
 			}
 		}
+		return false;
 	}
 	
 	public boolean deadLockDetection() {
@@ -259,19 +263,22 @@ public class TM {
 
 	private void resumeWaitingAction() {
 		Set<Transaction> set = new LinkedHashSet<Transaction>(waitingAction.keySet());
+		boolean couldRemove = false;
 		for (Transaction tr : set) {
 			String variableID = waitingAction.get(tr).get(0);
 			String actionInfo = waitingAction.get(tr).get(1);
 			String transactionID = tr.getTransactionID();
 			runningTransaction.add(tr);
 			if(actionInfo.equals("R")) {
-				read(transactionID, variableID);
+				couldRemove = read(transactionID, variableID);
 			} else {
 				String valueS = waitingAction.get(tr).get(2);
 				int value = Integer.parseInt(valueS);
-				write(transactionID, variableID, value);
+				couldRemove = write(transactionID, variableID, value);
 			}
-			waitingAction.remove(tr);
+			if(couldRemove) {
+				waitingAction.remove(tr);
+			}
 			break;
 		}
 	}
