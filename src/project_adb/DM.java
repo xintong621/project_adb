@@ -19,11 +19,11 @@ public class DM {
 		for (Site s : database) {
 			if (s.getSiteIndex() == siteNum) {
 				if (!s.isUp())
-					System.err.println("Site " + siteNum + " is already down.");
+					System.err.println("Site " + siteNum + " is already down");
 				else {
 					s.fail();
 					s.clearlockTable();
-					System.out.println("Site " + siteNum + " is down.");
+					System.out.println("Site " + siteNum + " is down");
 				}
 				break;
 			}

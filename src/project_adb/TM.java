@@ -272,12 +272,12 @@ public class TM {
 	public void fail(String siteNum) {
 		// transaction abort
 		int siteID = Integer.parseInt(siteNum);
-		
 		for(Site s : DM.database) {
 			if(s.getSiteIndex() == siteID) {
 				for(Transaction transaction : runningTransaction) {
 					if(s.ifSiteContainsTransaction(transaction)) {
-						System.out.print("" + transaction.getTransactionID() + " has been aborted because ");
+						DM.fail(siteID);
+						System.out.println("" + transaction.getTransactionID() + " has been aborted because site " + siteID + " is down");
 						terminate(transaction);
 						break;
 					}
@@ -285,7 +285,7 @@ public class TM {
 				break;
 			}
 		}
-		DM.fail(siteID);
+		
 		
 	}
 	
