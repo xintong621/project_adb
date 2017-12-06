@@ -266,6 +266,7 @@ public class TM {
 				write(transactionID, variableID, value);
 			}
 			waitingAction.remove(tr);
+			break;
 		}
 	}
 
@@ -292,6 +293,7 @@ public class TM {
 	public void recover(String siteNum) {
 		int siteID = Integer.parseInt(siteNum);
 		DM.recover(siteID);
+		resumeWaitingAction();
 	}
 
 	public void dump() {
