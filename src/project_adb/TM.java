@@ -42,9 +42,26 @@ public class TM {
 		Transaction transaction = getTransaction(transactionID);
 		if(transaction.getType().equals("RO")) {
 			return transaction.tempTable.get(onReadVariableID);
-		} else {
-			// transaction type of RW
+		} else { // transaction type of RW
 			// add readLock
+			if(DM.checkReadState(onReadVariableID) == true) {
+				if(DM.checkWriteLock(onReadVariableID) == false) {
+					DM.setLock(transaction, onReadVariableID, "RL"); // add readlock
+					// DM.readVariable(0, onReadVariable);
+					// read
+					// if all sites down?????
+					
+				} else {
+					// all sites contains this variable has been write locked
+					if(deadLockDetection() == false) {
+						// add to waiting queue
+					} else {
+						// kill youngest
+					}
+				}
+			} else {
+				// add to waiting queue
+			}
 			return -1;
 		}
 	}
@@ -68,9 +85,9 @@ public class TM {
 		 * */
 		Transaction transaction = getTransaction(transactionID);
 		if(DM.checkWriteState(onChangeVariable) == true) {
-			if(DM.checkWriteLock(onChangeVariable) == false) {
+			if((DM.checkWriteLock(onChangeVariable) == false) && DM.checkReadLock(onChangeVariable) == false) {
 				// execute write action
-				DM.setWriteLock(transaction, onChangeVariable, "WL");
+				DM.setLock(transaction, onChangeVariable, "WL");
 
 				// write to tempTable
 				transaction.tempTable.put(onChangeVariable, onChangeValue);

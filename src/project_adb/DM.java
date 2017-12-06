@@ -26,6 +26,13 @@ public class DM {
 		return false;
 	}
 	
+	protected static boolean checkReadState(String variableID) {
+		for(Site s : database) {
+			if((s.isUp() == true) && (s.isVariableExists(variableID) == true)) return true;
+		}
+		return false;
+	}
+	
 	protected static void copyCurrentDB(Transaction transaction) {
 		for(int i = 1 ; i < 21; i++) {
 			transaction.tempTable.put("x" + i, -1);
@@ -40,7 +47,7 @@ public class DM {
 		}
 	}
 	
-	protected static void setWriteLock(Transaction transaction, String variableID, String lockType) {
+	protected static void setLock(Transaction transaction, String variableID, String lockType) {
 		// filling locktalbe
 		for(Site s : database) {
 			if(s.isUp() && s.isVariableExists(variableID)) {
@@ -49,14 +56,15 @@ public class DM {
 		}
 	}
 	
+	
 	protected static void setReadLock(String variable) {
 		
 	}
-	
+// below two function could merge to one
 	protected static boolean checkWriteLock(String variableID) {
 		for(Site s : database) {
 			if(s.isUp() && s.isVariableExists(variableID)) {
-				boolean lockState = s.checkLockState(variableID);
+				boolean lockState = s.checkLockState(variableID, "WL");
 				return lockState;
 			}
 		}
@@ -64,6 +72,12 @@ public class DM {
 	}
 	
 	protected static boolean checkReadLock(String variableID) {
+		for(Site s : database) {
+			if(s.isUp() && s.isVariableExists(variableID)) {
+				boolean lockState = s.checkLockState(variableID, "RL");
+				return lockState;
+			}
+		}
 		return false;
 	}
 	
