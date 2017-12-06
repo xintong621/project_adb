@@ -105,9 +105,9 @@ public class DM {
 		return false;
 	}
 	
-	protected static Variable readVariable(int SiteIndex, String var) {	
+	protected static Variable readVariable(int SiteIndex, String variableID) {	
 		Site s = database.get(SiteIndex - 1);
-		return s.getVariable(var);
+		return s.getVariable(variableID);
 	}
 	
 	protected static void updateDatabase(String changedVariableID, int changedValue) {
