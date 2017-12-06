@@ -12,16 +12,19 @@ public class Graph {
 	// create an Array of lists for Adjacency List Representation
 	private Map<String, ArrayList<String>> adj;
 	private HashMap<String, Boolean> vertices;
+	ArrayList<String> cycleList;
 	
 	public Graph() {
 		adj = new HashMap<String, ArrayList<String>>();
 		vertices = new HashMap<>();
+		cycleList = new ArrayList<String>();
+		
 	}
 	
-	public int getVerticeNum() {
+	protected int getVerticeNum() {
 		return vertices.size();
 	}
-	public boolean isCyclic() {
+	protected boolean isCyclic() {
 		Set<String> recStack = new HashSet<>();
 		for(String v : vertices.keySet()) {
 			if(helper(v, recStack)) {
@@ -30,10 +33,16 @@ public class Graph {
 		}
 		return false;
 	}
-	public boolean helper(String v, Set<String> recStack) {
+	
+	protected ArrayList<String> cycleList() {
+		return cycleList;
+	}
+	
+	protected boolean helper(String v, Set<String> recStack) {
 		if(vertices.get(v) == false) {
 			vertices.replace(v, true);
 			recStack.add(v);
+			cycleList.add(v);
 			for(String i : adj.get(v)) {
 				if(vertices.get(i) == false) {
 					if(helper(i, recStack))
@@ -48,10 +57,10 @@ public class Graph {
 		return false;
 		
 	}
-	public void addEdge(String inComingTransaction, String holdLockTransaction) {
+	protected void addEdge(String inComingTransaction, String holdLockTransaction) {
 		this.adj.get(inComingTransaction).add(holdLockTransaction);
 	}
-	public void addVertices(String transactionID) {
+	protected void addVertices(String transactionID) {
 		if(!vertices.containsKey(transactionID)) {
 			this.vertices.put(transactionID, false);
 			this.adj.put(transactionID, new ArrayList<String>());

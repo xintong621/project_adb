@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Main {
 	public static void readfile() throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader("testcase/test15.txt"));
+		BufferedReader br = new BufferedReader(new FileReader("testcase/test18.txt"));
 		String line = null;
 		TM tm = new TM();
 		DM dm = new DM();

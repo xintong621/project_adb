@@ -197,10 +197,16 @@ public class TM {
 		// compare timestamp of all transaction
 		long youngest = Long.MIN_VALUE;
 		Transaction youngestTransaction = new Transaction(null, null);
-		for(Transaction tr : waitingAction.keySet()) {
-			if (tr.getTimeStamp() > youngest) {
-				youngest = tr.getTimeStamp();
-				youngestTransaction = tr;
+		ArrayList<String> arr = waitingGraph.cycleList();
+		for(String transactionID : arr) {
+			for(Transaction tr : waitingAction.keySet()) {
+				if(tr.getTransactionID().equals(transactionID)) {
+					if (tr.getTimeStamp() > youngest) {
+						youngest = tr.getTimeStamp();
+						youngestTransaction = tr;
+					}
+					break;
+				}
 			}
 		}
 		System.out.println("" + youngestTransaction.getTransactionID() + " has been aborted");
