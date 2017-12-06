@@ -35,20 +35,21 @@ public class DM {
 	
 	protected static void copyCurrentDB(Transaction transaction) {
 		for(int i = 1 ; i < 21; i++) {
-			transaction.tempTable.put("x" + i, -1);
+			String variableID = "x" + i;
+			transaction.tempTable.put(variableID, -1);
 		}
 		for(String vID : transaction.tempTable.keySet()) {
 			for(Site s : database) {
 				if(s.isUp() && s.isVariableExists(vID) && (transaction.tempTable.get(vID) == -1)) {
 					int value = s.getVariable(vID).getValue();
-					transaction.tempTable.replace(vID, value);
+					transaction.tempTable.put(vID, value);
 				}
 			}
 		}
 	}
 	
 	protected static void setLock(Transaction transaction, String variableID, String lockType) {
-		// filling locktalbe
+		// filling locktable
 		for(Site s : database) {
 			if(s.isUp() && s.isVariableExists(variableID)) {
 				s.lockVariable(variableID, transaction, lockType); // add lock to locktable

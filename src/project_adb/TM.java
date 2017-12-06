@@ -8,16 +8,20 @@ package project_adb;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 public class TM {
 	private List<Transaction> runningTransaction;
-	private HashMap<Transaction, String> waitingAction;
+	private LinkedHashMap<Transaction, String> waitingAction;
+	private Graph waitingGraph;
 	
 	protected TM() {
 		runningTransaction = new ArrayList<Transaction>();
-		waitingAction = new HashMap<Transaction, String>();
+		waitingAction = new LinkedHashMap<Transaction, String>();
 	}
 	
 	public Transaction begin(String transactionID, String transactionType) {
@@ -105,12 +109,14 @@ public class TM {
 				System.out.println("transaction " + transaction.getTransactionID() + " has changed variable " + onChangeVariable + " to " + onChangeValue
 						+ " in local copy");
 			} else {
+				if(!waitingAction.containsKey(transaction)) {
+					waitingAction.put(transaction, onChangeVariable);
+					System.out.println("Write action " + onChangeVariable + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+				}
 				if(deadLockDetection() == false){
-					if(!waitingAction.containsKey(transaction)) {
-						waitingAction.put(transaction, onChangeVariable);
-						System.out.println("Write action " + onChangeVariable + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
-					}
+					System.out.println("no deadlocked");
 				} else {
+					System.out.println("deadlocked");
 					killYoungest();
 				}
 			}
@@ -123,7 +129,23 @@ public class TM {
 	}
 	
 	public boolean deadLockDetection() {
-		return false;
+		waitingGraph = new Graph();
+		for(Transaction tr : waitingAction.keySet()) {
+			waitingGraph.addVertices(tr.getTransactionID());
+			String variableID = waitingAction.get(tr);
+			Set<Transaction> holdLockTransactionSet = new HashSet<Transaction>();
+			for(Site s : DM.database) {
+				if(s.isVariableExists(variableID)) {
+					holdLockTransactionSet = s.getLockTransaction(variableID);
+					break;
+				}
+			}
+			for(Transaction holdTr : holdLockTransactionSet) {
+				waitingGraph.addEdge(tr.getTransactionID(), holdTr.getTransactionID());
+				waitingGraph.addVertices(holdTr.getTransactionID());
+			}
+		}
+		return waitingGraph.isCyclic();
 	}
 	
 	public void killYoungest() {
@@ -168,7 +190,7 @@ public class TM {
 	}
 	
 	public void fail(int siteNum) {
-		
+		// transaction abort
 	}
 	
 	public void recover(int siteNum) {

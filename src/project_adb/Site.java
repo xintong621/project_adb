@@ -3,6 +3,7 @@ package project_adb;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 public class Site {
 	private int siteIndex;
@@ -49,6 +50,15 @@ public class Site {
 				} 
 			}
 		}
+	}
+	public Set<Transaction> getLockTransaction(String variableID) {
+		for (Variable v : lockTable.keySet()) {
+			if(v.getVariableID().equals(variableID)) {
+				return lockTable.get(v).keySet();
+			}
+		}
+		return null;
+		
 	}
 	
 	protected Variable getVariable(String variableID) {
