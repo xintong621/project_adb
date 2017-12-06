@@ -51,6 +51,7 @@ public class Site {
 			}
 		}
 	}
+	
 	public Set<Transaction> getLockTransaction(String variableID) {
 		for (Variable v : lockTable.keySet()) {
 			if(v.getVariableID().equals(variableID)) {
@@ -59,6 +60,16 @@ public class Site {
 		}
 		return null;
 		
+	}
+	
+	protected void unLock(Transaction transaction) {
+		for (Variable v : lockTable.keySet()) {
+			for(Transaction tr : lockTable.get(v).keySet()) {
+				if(tr.equals(transaction)) {
+					lockTable.get(v).remove(tr);
+				}
+			}
+		}
 	}
 	
 	protected Variable getVariable(String variableID) {

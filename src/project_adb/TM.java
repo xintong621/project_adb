@@ -117,6 +117,7 @@ public class TM {
 					System.out.println("no deadlocked");
 				} else {
 					System.out.println("deadlocked");
+					// remove from waitinglist
 					killYoungest();
 				}
 			}
@@ -180,9 +181,13 @@ public class TM {
 			waitingAction.remove(transaction);
 		}
 		// clear temp table
-		transaction.tempTable.clear();	
+		transaction.tempTable.clear();
 		// unlock all locks
+		
+		DM.unLock(transaction);
+
 		// iterate all locks of transaction and set free
+		// dequeueWaitingTransactions();
 	}
 	
 	public void abort() {

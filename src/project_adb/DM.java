@@ -93,6 +93,13 @@ public class DM {
 		}
 	}
 	
+	protected static void unLock(Transaction transaction) {
+		for(Site s : database) {
+			s.unLock(transaction);
+		}
+		
+	}
+	
 	protected static void dump() {
 		//print all information in all site
 		for (Site s : database) {
