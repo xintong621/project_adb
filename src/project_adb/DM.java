@@ -21,9 +21,23 @@ public class DM {
 				if (!s.isUp())
 					System.err.println("Site " + siteNum + " is already down.");
 				else {
-					s.failSite();
+					s.fail();
 					s.clearlockTable();
 					System.out.println("Site " + siteNum + " is down.");
+				}
+				break;
+			}
+		}
+	}
+	
+	protected static void recover(int siteNum) {
+		for (Site s : database) {
+			if (s.getSiteIndex() == siteNum) {
+				if (s.isUp())
+					System.out.println("The site " + siteNum + " is already up.");
+				else {
+					s.recover();
+					System.out.println("The site " + siteNum + " is up now.");
 				}
 				break;
 			}

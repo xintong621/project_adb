@@ -159,7 +159,14 @@ public class Site {
 		}
 	}
 	
-	protected void failSite() {
+	protected void fail() {
 		isUp = false;
+	}
+	
+	protected void recover() {
+		isUp = true;
+		for(Variable v : variableList) {
+			lockTable.put(v, new HashMap<Transaction, String>());
+		}
 	}
 }

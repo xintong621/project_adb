@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Main {
 	public static void readfile() throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader("testcase/test1.txt"));
+		BufferedReader br = new BufferedReader(new FileReader("testcase/test15.txt"));
 		String line = null;
 		TM tm = new TM();
 		DM dm = new DM();
@@ -25,7 +25,7 @@ public class Main {
 				String[] actionInfo = lineSplit[1].split(",");
 				String transactionID = actionInfo[0];
 				String onChangeVariableID = actionInfo[1];
-				int onChangeValue = Integer.parseInt(actionInfo[2].split("\\)")[0]);
+				int onChangeValue = Integer.parseInt(actionInfo[2].split("[\\)]")[0].trim());
 				
 				tm.write(transactionID, onChangeVariableID, onChangeValue);
 			}
@@ -50,7 +50,8 @@ public class Main {
 				tm.fail(failSiteID);
 			}
 			else if(action.equals("recover")) {
-				// wait for implement
+				String recoverSiteID = lineSplit[1].split("\\)")[0];
+				tm.recover(recoverSiteID);
 			}
 			else if(action.equals("end")) {
 				// only related to write action
