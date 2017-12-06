@@ -24,7 +24,7 @@ public class DM {
 					s.fail();
 					s.clearlockTable();
 					s.clearVariableList();
-					System.out.println("Site " + siteNum + " is down");
+					System.out.println("Fail: Site " + siteNum + " is down");
 				}
 				break;
 			}
@@ -35,10 +35,10 @@ public class DM {
 		for (Site s : database) {
 			if (s.getSiteIndex() == siteNum) {
 				if (s.isUp())
-					System.out.println("The site " + siteNum + " is already up.");
+					System.err.println("The site " + siteNum + " is already up.");
 				else {
 					s.recover();
-					System.out.println("The site " + siteNum + " is up now.");
+					System.out.println("Recover: Site " + siteNum + " is up now.");
 				}
 				break;
 			}
@@ -129,11 +129,13 @@ public class DM {
 	}
 	
 	protected static void dump() {
+		System.out.println("========================================================");
+		System.out.println("Dump:");
 		//print all information in all site
 		for (Site s : database) {
 			
 			if (s.isUp()) {
-				System.out.println("Site " + s.getSiteIndex());
+				System.out.println("Site Number: " + s.getSiteIndex());
 				
 				for (int i = 1; i <= 20; i++) {
 					String var = "x" + Integer.toString(i);
@@ -151,6 +153,8 @@ public class DM {
 	}
 	
 	protected static void dump(int siteIndex) {
+		System.out.println("========================================================");
+		System.out.println("Dump:");
 		//print all information in this site
 		for (Site s : database) {
 			if (s.getSiteIndex() == siteIndex) {
@@ -158,7 +162,7 @@ public class DM {
 				if (!s.isUp())
 					System.err.println("The site " + siteIndex + " is down.");
 				else {
-					System.out.println("Site " + s.getSiteIndex());
+					System.out.println("Site Number: " + s.getSiteIndex());
 					
 					for (int i = 1; i <= 20; i++) {
 						String var = "x" + Integer.toString(i);
@@ -174,8 +178,23 @@ public class DM {
 		}
 	}
 	
-	protected static void dump(String variable) {
+	protected static void dump(String variableID) {
+		System.out.println("========================================================");
+		System.out.println("Dump:");
 		//print all information with this variable
+		System.out.println("Variable ID: " + variableID);
+		for (Site s : database) {
+			if (s.isUp()) {
+				String site = "Site " + s.getSiteIndex();
+
+				if (s.isVariableExists(variableID)) {
+					Variable variable = readVariable(s.getSiteIndex(), variableID);
+					System.out.println(site
+							+ ": " + variable.getValue());
+				}
+
+			}
+		}
 	}
 
 }

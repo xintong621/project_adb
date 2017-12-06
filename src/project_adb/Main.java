@@ -10,6 +10,7 @@ public class Main {
 		TM tm = new TM();
 		DM dm = new DM();
 		
+		
 		while((line = br.readLine()) != null) {
 			String[] lineSplit = line.split("\\(");
 			String action = lineSplit[0];

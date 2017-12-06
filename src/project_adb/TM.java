@@ -34,7 +34,7 @@ public class TM {
 		if(transaction.getType().equals("RO")) {
 			DM.copyCurrentDB(transaction);
 		}
-		System.out.println(transactionID + " of type " + transactionType + " successfully initialized");
+		System.out.println("Begin: " + transactionID + " of type " + transactionType + " successfully initialized");
 		runningTransaction.add(transaction);
 
 		return transaction;
@@ -46,15 +46,15 @@ public class TM {
 		 * */
 		Transaction transaction = getTransaction(transactionID);
 		if(transaction == null) {
-			System.out.println("Transaction " + transactionID + " not exist");
+			System.err.println("alert: Transaction " + transactionID + " does not exist");
 			return true;
 		}
 		if(transaction.getType().equals("RO")) {
 			int readTempValue = transaction.tempTable.get(onReadVariableID);
 			if (readTempValue == -1) {
-				System.out.println("Couldn't find value of " + onReadVariableID);
+				System.err.println("alert: Couldn't find value of " + onReadVariableID);
 			} else {
-				System.out.println(transactionID + " : " + onReadVariableID + " : " + readTempValue);
+				System.out.println("Read: transaction " + transactionID + " has read variable " + onReadVariableID + " with value " + readTempValue);
 				return true;
 			}
 		} else { // transaction type of RW
@@ -68,9 +68,9 @@ public class TM {
 						if(s.isUp() && s.isVariableExists(onReadVariableID)) {
 							Variable readItem = DM.readVariable(s.getSiteIndex(), onReadVariableID);
 							if (readItem.getValue() == -1) {
-								System.out.println("Couldn't find value of " + readItem.getVariableID());
+								System.err.println("alert: Couldn't find value of " + readItem.getVariableID());
 							} else {
-								System.out.println(transactionID + " : " + onReadVariableID + "." + s.getSiteIndex() + " : " + readItem.getValue());
+								System.out.println("Read: transaction " + transactionID + " has read variable " + onReadVariableID + "." + s.getSiteIndex() + " with value " + readItem.getValue());
 								return true;
 							}
 							break;
@@ -81,19 +81,19 @@ public class TM {
 					// add to waiting list
 					if(!waitingAction.containsKey(transaction)) {
 						addToWaitingAction(onReadVariableID, "R", null, transaction);
-						System.out.println("Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+						System.out.println("Waitlist: Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
 					}
 					if(deadLockDetection() == false) {
-						System.out.println("no deadlocked");
+						System.out.println("Deadlock: There is no deadlock");
 					} else {
-						System.out.print("deadlocked, ");
+						System.out.print("Deadlock: Deadlock detected, ");
 						killYoungest(); // kill youngest
 					}
 				}
 			} else {
 				if(!waitingAction.containsKey(transaction)) {
 					addToWaitingAction(onReadVariableID, "R", null, transaction);
-					System.out.println("Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+					System.out.println("Waitlist: Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
 				}
 			}
 		}
@@ -142,7 +142,7 @@ public class TM {
 		 * */
 		Transaction transaction = getTransaction(transactionID);
 		if(transaction == null) {
-			System.out.println("Transaction " + transactionID + " not exist");
+			System.err.println("alert: Transaction " + transactionID + " does not exist");
 			return true;
 		}
 		if(DM.checkWriteState(onChangeVariableID) == true) {
@@ -152,18 +152,18 @@ public class TM {
 
 				// write to tempTable
 				transaction.tempTable.put(onChangeVariableID, onChangeValue);
-				System.out.println("transaction " + transaction.getTransactionID() + " has changed variable " + onChangeVariableID + " to " + onChangeValue
+				System.out.println("Write: transaction " + transaction.getTransactionID() + " has changed variable " + onChangeVariableID + " to " + onChangeValue
 						+ " in local copy");
 				return true;
 			} else {
 				if(!waitingAction.containsKey(transaction)) {
 					addToWaitingAction(onChangeVariableID, "W", onChangeValue.toString(), transaction);
-					System.out.println("Write action " + onChangeVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+					System.out.println("Waitlist: Write action " + onChangeVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
 				}
 				if(deadLockDetection() == false){
-					System.out.println("no deadlocked");
+					System.out.println("Deadlock: there is no deadlock");
 				} else {
-					System.out.print("deadlocked, ");
+					System.out.print("Deadlock: deadlock detected, ");
 					// remove from waitinglist
 					killYoungest();
 				}
@@ -171,7 +171,7 @@ public class TM {
 		} else {
 			if(!waitingAction.containsKey(transaction)) {
 				addToWaitingAction(onChangeVariableID, "W", onChangeValue.toString(), transaction);
-				System.out.println("Write action " + onChangeVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+				System.out.println("Waitlist: Write action " + onChangeVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
 			}
 		}
 		return false;
@@ -223,19 +223,19 @@ public class TM {
 		// updateAllSites(variable);
 		Transaction transaction = getTransaction(transactionID);
 		if(transaction == null) {
-			System.out.println("Transaction " + transactionID + " not exist");
+			System.err.println("alert: Transaction " + transactionID + " does not exist");
 			return;
 		}
 		if(transaction.getType().equals("RW")) {
 			for(String changedVariableID : transaction.tempTable.keySet()) {
 				int changedValue = transaction.tempTable.get(changedVariableID);
 				DM.updateDatabase(changedVariableID, changedValue);
-				System.out.println("Transaction " + transaction.getTransactionID() + ": changed the value of " + changedVariableID + " to "
+				System.out.println("Commit: Transaction " + transaction.getTransactionID() + ": changed the value of " + changedVariableID + " to "
 				+ changedValue + " in database.");
 
 			}
 		}
-		System.out.println("Transaction " + transaction.getTransactionID() + " has ended.");
+		System.out.println("Terminate: Transaction " + transaction.getTransactionID() + " has ended.");
 		terminate(transaction);
 		
 	}
@@ -292,7 +292,7 @@ public class TM {
 				for(Transaction transaction : runningTransaction) {
 					if(s.ifSiteContainsTransaction(transaction)) {
 						DM.fail(siteID);
-						System.out.println("" + transaction.getTransactionID() + " has been aborted because site " + siteID + " is down");
+						System.err.println("" + transaction.getTransactionID() + " has been aborted because site " + siteID + " is down");
 						terminate(transaction);
 						siteHasRunning = true;
 						break;
