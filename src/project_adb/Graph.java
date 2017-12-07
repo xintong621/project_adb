@@ -17,7 +17,6 @@ public class Graph {
 	public Graph() {
 		adj = new HashMap<String, ArrayList<String>>();
 		vertices = new HashMap<>();
-		cycleList = new ArrayList<String>();
 		
 	}
 	
@@ -26,9 +25,12 @@ public class Graph {
 	}
 	protected boolean isCyclic() {
 		Set<String> recStack = new HashSet<>();
+		
 		for(String v : vertices.keySet()) {
 			if(helper(v, recStack)) {
 				return true;
+			} else {
+				//cycleList.remove(v);
 			}
 		}
 		return false;
@@ -39,16 +41,19 @@ public class Graph {
 	}
 	
 	protected boolean helper(String v, Set<String> recStack) {
+		cycleList = new ArrayList<String>();
+		cycleList.add(v);
 		if(vertices.get(v) == false) {
 			vertices.replace(v, true);
 			recStack.add(v);
-			cycleList.add(v);
 			for(String i : adj.get(v)) {
 				if(vertices.get(i) == false) {
-					if(helper(i, recStack))
+					if(helper(i, recStack)) {
 						return true;
+					}
 				}
 				else if(recStack.contains(i)) {
+					cycleList.add(i);
 					return true;
 				}
 			}
