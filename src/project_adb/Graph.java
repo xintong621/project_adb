@@ -1,3 +1,17 @@
+/**
+ * Advanced Database System
+ * Replicated Concurrency Control and Recovery
+ * 
+ * @Author: Xintong Wang(N18322289)
+ * @Author: Dailing Zhu(N11754882)
+ * 
+ * @Date: 07/12/2017
+ * 
+ * @Class_Description:
+ * This is the Graph class of the project, 
+ * it defines directed graph structure for deadlock detection.
+**/
+
 package project_adb;
 
 import java.util.ArrayList;

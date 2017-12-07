@@ -1,3 +1,18 @@
+/**
+ * Advanced Database System
+ * Replicated Concurrency Control and Recovery
+ * 
+ * @Author: Xintong Wang(N18322289)
+ * @Author: Dailing Zhu(N11754882)
+ * 
+ * @Date: 07/12/2017
+ * 
+ * @Class_Description:
+ * This is the Transaction class of the project, 
+ * it defines transaction structure containing transaction's
+ * type, state, the time it was created, and lock table etc.
+**/
+
 package project_adb;
 
 import java.util.ArrayList;

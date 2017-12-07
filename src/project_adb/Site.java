@@ -1,3 +1,17 @@
+/**
+ * Advanced Database System
+ * Replicated Concurrency Control and Recovery
+ * 
+ * @Author: Xintong Wang(N18322289)
+ * @Author: Dailing Zhu(N11754882)
+ * 
+ * @Date: 07/12/2017
+ * 
+ * @Class_Description:
+ * This is the Site class of the project, 
+ * it defines Site structure containing index, variable list and state etc.
+**/
+
 package project_adb;
 
 import java.util.HashMap;
