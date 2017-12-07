@@ -79,10 +79,8 @@ public class TM {
 				} else {
 					// all sites contains this variable has been write locked
 					// add to waiting list
-					if(!waitingAction.containsKey(transaction)) {
-						addToWaitingAction(onReadVariableID, "R", null, transaction);
-						System.out.println("Waitlist: Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
-					}
+					addToWaitingAction(onReadVariableID, "R", null, transaction);
+					System.out.println("Waitlist: Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
 					if(deadLockDetection() == false) {
 						System.out.println("Deadlock: There is no deadlock");
 					} else {
@@ -91,10 +89,8 @@ public class TM {
 					}
 				}
 			} else {
-				if(!waitingAction.containsKey(transaction)) {
-					addToWaitingAction(onReadVariableID, "R", null, transaction);
-					System.out.println("Waitlist: Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
-				}
+				addToWaitingAction(onReadVariableID, "R", null, transaction);
+				System.out.println("Waitlist: Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
 			}
 		}
 		return false;
@@ -122,7 +118,11 @@ public class TM {
 			actionInfo.add("W");
 			actionInfo.add(newValue);
 		}
-		waitingAction.put(transaction, actionInfo);
+		if(waitingAction.containsKey(transaction)) {
+			waitingAction.get(transaction).addAll(actionInfo);
+		} else {
+			waitingAction.put(transaction, actionInfo);
+		}
 	}
 	
 	protected boolean isExsistingTransaction(String transactionID) {
@@ -156,10 +156,8 @@ public class TM {
 						+ " in local copy");
 				return true;
 			} else {
-				if(!waitingAction.containsKey(transaction)) {
 					addToWaitingAction(onChangeVariableID, "W", onChangeValue.toString(), transaction);
 					System.out.println("Waitlist: Write action " + onChangeVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
-				}
 				if(deadLockDetection() == false){
 					System.out.println("Deadlock: there is no deadlock");
 				} else {
@@ -169,10 +167,8 @@ public class TM {
 				}
 			}
 		} else {
-			if(!waitingAction.containsKey(transaction)) {
 				addToWaitingAction(onChangeVariableID, "W", onChangeValue.toString(), transaction);
 				System.out.println("Waitlist: Write action " + onChangeVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
-			}
 		}
 		return false;
 	}
@@ -277,7 +273,11 @@ public class TM {
 				couldRemove = write(transactionID, variableID, value);
 			}
 			if(couldRemove) {
-				waitingAction.remove(tr);
+				if(waitingAction.get(tr).size() == 1) {
+					waitingAction.remove(tr);
+				} else {
+					waitingAction.get(tr).remove(0);
+				}
 			}
 			break;
 		}
