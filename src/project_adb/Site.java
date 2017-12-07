@@ -25,6 +25,8 @@ public class Site {
 	private HashSet<Variable> variableList; // Boolean ====>> exist
 	private HashMap<Variable, HashMap<Transaction, String>> lockTable; // variable(transaction, lockType)
 	//lockTable could divided into readLtable and writeLtable
+	
+	// Constructor
 	protected Site(int index) {
 		variableList = new HashSet<>();
 		isUp = true;
@@ -50,6 +52,8 @@ public class Site {
 	public boolean getSiteStatus() {
 		return true;
 	}
+	
+	// Lock variable
 	public void lockVariable(String variableID, Transaction transaction, String lockType) {
 		if(transaction.getType().equals("RO")) {
 			
@@ -74,6 +78,7 @@ public class Site {
 		
 	}
 	
+	// Release lock
 	protected void unLock(Transaction transaction) {
 		for (Variable v : lockTable.keySet()) {
 			for(Transaction tr : lockTable.get(v).keySet()) {
@@ -100,6 +105,7 @@ public class Site {
 		variableList.clear();
 	}
 	
+	// Check if any transaction accesses this site
 	protected boolean ifSiteContainsTransaction(Transaction transaction) {
 		HashMap<Transaction, String> transactionInfoR = new HashMap<>();
 		HashMap<Transaction, String> transactionInfoW = new HashMap<>();
@@ -111,6 +117,7 @@ public class Site {
 		return false;
 	}
 	
+	// Check if this site contains certain variable
 	protected boolean isVariableExists(String variableID) {
 		for (Variable v : variableList) {
 			if (variableID.equals(v.getVariableID())) {
@@ -121,6 +128,7 @@ public class Site {
 		return false;
 	}
 	
+	// Check if the certain variable is locked
 	protected boolean checkLockState(String variableID, String typeLock) {
 		//return true if readlocked || writelocked
 		boolean result = false;
@@ -175,10 +183,12 @@ public class Site {
 		}
 	}
 	
+	// Change isUP to false
 	protected void fail() {
 		isUp = false;
 	}
 	
+	// Change isUp to true, recover odd variables
 	protected void recover() {
 		isUp = true;
 		

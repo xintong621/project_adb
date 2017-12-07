@@ -20,8 +20,8 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Main {
-	public static void readfile() throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader("testcase/partialTest.txt"));
+	public static void readfile(String name) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader("testcase/" + name));
 		String line = null;
 		TM tm = new TM();
 		DM dm = new DM();
@@ -79,6 +79,9 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		readfile();
+		Scanner sc = new Scanner(System.in);   
+	    System.out.println("Please tap the file name of your input file:");   
+	    String name = sc.nextLine();
+		readfile(name);
 	}
 }

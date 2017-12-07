@@ -22,6 +22,7 @@ public class DM {
 	
 	protected static List<Site> database;
 	
+	// constructor
 	protected DM() {
 		database = new ArrayList<Site>();
 		for (int i = 1; i <= 10; i++) {
@@ -30,6 +31,7 @@ public class DM {
 		}
 	}
 	
+	// fail the site
 	protected static void fail(int siteNum) {
 		for (Site s : database) {
 			if (s.getSiteIndex() == siteNum) {
@@ -46,6 +48,7 @@ public class DM {
 		}
 	}
 	
+	// recover the site
 	protected static void recover(int siteNum) {
 		for (Site s : database) {
 			if (s.getSiteIndex() == siteNum) {
@@ -60,6 +63,7 @@ public class DM {
 		}
 	}
 	
+	// Check if the variable is able to be written
 	protected static boolean checkWriteState(String variableID) {
 		// true condition:
 		// 1. at least 1 site which contains this variable is up
@@ -69,6 +73,7 @@ public class DM {
 		return false;
 	}
 	
+	// Check if the variable is able to be read
 	protected static boolean checkReadState(String variableID) {
 		for(Site s : database) {
 			if((s.isUp() == true) && (s.isVariableExists(variableID) == true)) return true;
@@ -76,6 +81,7 @@ public class DM {
 		return false;
 	}
 	
+	// Copy all the value in database into temp table of transaction(for RO transaction)
 	protected static void copyCurrentDB(Transaction transaction) {
 		for(int i = 1 ; i < 21; i++) {
 			String variableID = "x" + i;
@@ -91,6 +97,7 @@ public class DM {
 		}
 	}
 	
+	// Require lock
 	protected static void setLock(Transaction transaction, String variableID, String lockType) {
 		// filling locktable
 		for(Site s : database) {
@@ -100,7 +107,9 @@ public class DM {
 		}
 	}
 
-// below two function could merge to one
+	// below two function could merge to one
+	
+	// Check if the variable has been WLed by other
 	protected static boolean checkWriteLock(String variableID) {
 		for(Site s : database) {
 			if(s.isUp() && s.isVariableExists(variableID)) {
@@ -111,6 +120,7 @@ public class DM {
 		return false;
 	}
 	
+	// Check if the variable has been RLed by other
 	protected static boolean checkReadLock(String variableID) {
 		for(Site s : database) {
 			if(s.isUp() && s.isVariableExists(variableID)) {
@@ -121,11 +131,13 @@ public class DM {
 		return false;
 	}
 	
+	// Get the value of variable
 	protected static Variable readVariable(int SiteIndex, String variableID) {	
 		Site s = database.get(SiteIndex - 1);
 		return s.getVariable(variableID);
 	}
 	
+	// Update database when a transaction has committed
 	protected static void updateDatabase(String changedVariableID, int changedValue) {
 		for(Site s : DM.database) {
 			if(s.isUp()) {
@@ -136,6 +148,7 @@ public class DM {
 		}
 	}
 	
+	// Release all locks
 	protected static void unLock(Transaction transaction) {
 		for(Site s : database) {
 			s.unLock(transaction);
@@ -143,6 +156,7 @@ public class DM {
 		
 	}
 	
+	// Print 
 	protected static void dump() {
 		System.out.println("========================================================");
 		System.out.println("Dump:");

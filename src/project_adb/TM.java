@@ -38,6 +38,7 @@ public class TM {
 	private LinkedHashMap<Transaction, ArrayList<String>> waitingAction;
 	private Graph waitingGraph;
 	
+	// Constructor
 	protected TM() {
 		runningTransaction = new ArrayList<Transaction>();
 		waitingAction = new LinkedHashMap<Transaction, ArrayList<String>>();

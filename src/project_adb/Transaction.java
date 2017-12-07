@@ -28,10 +28,11 @@ public class Transaction {
 	protected String currentState;
 	public Hashtable<String, Integer> tempTable = new Hashtable<>(); // temporarily store changed value
 	
+	// Constructor
 	protected Transaction(String id, String transactionType) {
 		this.transactionID = id; // such as T1, T2...,etc
 		this.transactionType = transactionType; // as in RO and RW
-		this.timeStamp = System.nanoTime(); // record the current timestamp
+		this.timeStamp = System.nanoTime(); // record the time it was created
 		locks = new HashMap<Integer ,List<String>>();
 		for(int i : locks.keySet())
 			locks.put(i, new ArrayList<String>());

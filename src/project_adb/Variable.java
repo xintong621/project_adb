@@ -19,6 +19,13 @@ public class Variable {
 	private String variableID;
 	private int value;
 	private int index;
+	
+	// Constructor
+	protected Variable(int index) {
+		this.index = index;
+		this.value = index*10;
+		this.variableID = "x" + index;
+	}
 
 	public int getValue() {
 		return value;
@@ -30,11 +37,6 @@ public class Variable {
 		return variableID;
 	}
 	
-	protected Variable(int index) {
-		this.index = index;
-		this.value = index*10;
-		this.variableID = "x" + index;
-	}
 	
 	protected void setValue(int value) {
 		this.value = value;

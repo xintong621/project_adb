@@ -28,6 +28,7 @@ public class Graph {
 	private HashMap<String, Boolean> vertices;
 	ArrayList<String> cycleList;
 	
+	// Constructor
 	public Graph() {
 		adj = new HashMap<String, ArrayList<String>>();
 		vertices = new HashMap<>();
@@ -37,6 +38,8 @@ public class Graph {
 	protected int getVerticeNum() {
 		return vertices.size();
 	}
+	
+	// Check if cyclic
 	protected boolean isCyclic() {
 		Set<String> recStack = new HashSet<>();
 		
@@ -54,6 +57,7 @@ public class Graph {
 		return cycleList;
 	}
 	
+	// DFS search
 	protected boolean helper(String v, Set<String> recStack) {
 		cycleList = new ArrayList<String>();
 		cycleList.add(v);
@@ -76,9 +80,13 @@ public class Graph {
 		return false;
 		
 	}
+	
+	// Add new directed edge
 	protected void addEdge(String inComingTransaction, String holdLockTransaction) {
 		this.adj.get(inComingTransaction).add(holdLockTransaction);
 	}
+	
+	// Add new vertex
 	protected void addVertices(String transactionID) {
 		if(!vertices.containsKey(transactionID)) {
 			this.vertices.put(transactionID, false);
