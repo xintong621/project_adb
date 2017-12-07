@@ -3,6 +3,7 @@
 // Normally, we wait till the end(T1) to abort T1.
 // However, it is ok to abort T1 right away when fail(2) happens. Both
 // are correct.
+
 begin(T1)
 begin(T2)
 R(T1,x1)
