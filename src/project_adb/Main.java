@@ -21,11 +21,11 @@ import java.util.Scanner;
 
 public class Main {
 	public static void readfile(String filename) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader("testcase/"+filename));
+		BufferedReader br = new BufferedReader(new FileReader(filename));
+		
 		String line = null;
 		TM tm = new TM();
 		DM dm = new DM();
-		
 		
 		while((line = br.readLine()) != null) {
 			String[] lineSplit = line.split("\\(");
@@ -78,10 +78,8 @@ public class Main {
 		}
 	}
 	
+	
 	public static void main(String[] args) throws IOException {
-		Scanner sc = new Scanner(System.in);   
-	    System.out.println("Please type name of the file you want to test:");   
-	    String filename = sc.nextLine();
-		readfile(filename);
+		readfile(args[1]);
 	}
 }
