@@ -76,7 +76,8 @@ public class DM {
 		return false;
 	}
 	
-	protected static void copyCurrentDB(Transaction transaction) {
+	protected static boolean copyCurrentDB(Transaction transaction) {
+		boolean hasRnningSite = false;
 		for(int i = 1 ; i < 21; i++) {
 			String variableID = "x" + i;
 			transaction.tempTable.put(variableID, -1);
@@ -86,9 +87,11 @@ public class DM {
 				if(s.isUp() && s.isVariableExists(vID) && (transaction.tempTable.get(vID) == -1)) {
 					int value = s.getVariable(vID).getValue();
 					transaction.tempTable.put(vID, value);
+					hasRnningSite = true;
 				}
 			}
 		}
+		return hasRnningSite;
 	}
 	
 	protected static void setLock(Transaction transaction, String variableID, String lockType) {

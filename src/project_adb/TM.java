@@ -43,19 +43,22 @@ public class TM {
 		waitingAction = new LinkedHashMap<Transaction, ArrayList<String>>();
 	}
 	
-	public Transaction begin(String transactionID, String transactionType) {
+	public void begin(String transactionID, String transactionType) {
 		/*
 		 * create new transaction
 		 * add to running
 		 * */
 		Transaction transaction = new Transaction(transactionID, transactionType);
 		if(transaction.getType().equals("RO")) {
-			DM.copyCurrentDB(transaction);
+			if(!DM.copyCurrentDB(transaction)) {
+				//System.out.println("***alert: Read only transaction " + transactionID + " has been aborted because no sites are available");
+				//terminate(getTransaction(transactionID));
+			}
 		}
 		System.out.println("Begin: " + transactionID + " of type " + transactionType + " successfully initialized");
 		runningTransaction.add(transaction);
 
-		return transaction;
+		return;
 	}
 	
 	public boolean read(String transactionID, String onReadVariableID) {
@@ -64,13 +67,15 @@ public class TM {
 		 * */
 		Transaction transaction = getTransaction(transactionID);
 		if(transaction == null) {
-			System.err.println("alert: Transaction " + transactionID + " does not exist");
+			System.out.println("***alert: Transaction " + transactionID + " does not exist");
 			return true;
 		}
 		if(transaction.getType().equals("RO")) {
 			int readTempValue = transaction.tempTable.get(onReadVariableID);
 			if (readTempValue == -1) {
-				System.err.println("alert: Couldn't find value of " + onReadVariableID);
+				addToWaitingAction(onReadVariableID, "R", null, transaction);
+				//System.out.println("***alert: Couldn't find value of " + onReadVariableID);
+				System.out.println("Waitlist: Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
 			} else {
 				System.out.println("Read: transaction " + transactionID + " has read variable " + onReadVariableID + " with value " + readTempValue);
 				return true;
@@ -86,7 +91,7 @@ public class TM {
 						if(s.isUp() && s.isVariableExists(onReadVariableID)) {
 							Variable readItem = DM.readVariable(s.getSiteIndex(), onReadVariableID);
 							if (readItem.getValue() == -1) {
-								System.err.println("alert: Couldn't find value of " + readItem.getVariableID());
+								System.out.println("***alert: Couldn't find value of " + readItem.getVariableID());
 							} else {
 								System.out.println("Read: transaction " + transactionID + " has read variable " + onReadVariableID + "." + s.getSiteIndex() + " with value " + readItem.getValue());
 								return true;
@@ -160,7 +165,7 @@ public class TM {
 		 * */
 		Transaction transaction = getTransaction(transactionID);
 		if(transaction == null) {
-			System.err.println("alert: Transaction " + transactionID + " does not exist");
+			System.out.println("***alert: Transaction " + transactionID + " does not exist");
 			return true;
 		}
 		if(DM.checkWriteState(onChangeVariableID) == true) {
@@ -198,6 +203,9 @@ public class TM {
 	public boolean deadLockDetection() {
 		waitingGraph = new Graph();
 		for(Transaction tr : waitingAction.keySet()) {
+			if(tr.getType().equals("RO")) {
+				continue;
+			}
 			waitingGraph.addVertices(tr.getTransactionID());
 			String variableID = waitingAction.get(tr).get(0);
 			Set<Transaction> holdLockTransactionSet = new HashSet<Transaction>();
@@ -241,7 +249,7 @@ public class TM {
 		// updateAllSites(variable);
 		Transaction transaction = getTransaction(transactionID);
 		if(transaction == null) {
-			System.err.println("alert: Transaction " + transactionID + " does not exist");
+			System.out.println("***alert: Transaction " + transactionID + " does not exist");
 			return;
 		}
 		if(transaction.getType().equals("RW")) {
@@ -310,7 +318,7 @@ public class TM {
 				for(Transaction transaction : runningTransaction) {
 					if(s.ifSiteContainsTransaction(transaction)) {
 						DM.fail(siteID);
-						System.err.println("" + transaction.getTransactionID() + " has been aborted because site " + siteID + " is down");
+						System.out.println("***alert:" + transaction.getTransactionID() + " has been aborted because site " + siteID + " is down");
 						terminate(transaction);
 						siteHasRunning = true;
 						break;
@@ -329,6 +337,7 @@ public class TM {
 	public void recover(String siteNum) {
 		int siteID = Integer.parseInt(siteNum);
 		DM.recover(siteID);
+		
 		resumeWaitingAction();
 	}
 
