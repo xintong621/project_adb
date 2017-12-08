@@ -20,8 +20,8 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Main {
-	public static void readfile() throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader("testcase/Test24_Input.txt"));
+	public static void readfile(String filename) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader("testcase/"+filename));
 		String line = null;
 		TM tm = new TM();
 		DM dm = new DM();
@@ -79,6 +79,9 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		readfile();
+		Scanner sc = new Scanner(System.in);   
+	    System.out.println("Please type name of the file you want to test:");   
+	    String filename = sc.nextLine();
+		readfile(filename);
 	}
 }
