@@ -32,19 +32,19 @@ We have packed our project as a .jar file named ADBProject.jar. In order to run 
 If you wanna compile and run our program without using ADBProject.jar, you can follow steps below:
 1. First get into the folder where all .java files are.
 ```
-		$ cd ~/src/project_adb
+	$ cd ~/src/project_adb
 ```
 2. Compile all files in order to create .class files.
 ```
-		$ javac Main.java DM.java Graph.java Site.java TM.java Transaction.java Variable.java
+	$ javac Main.java DM.java Graph.java Site.java TM.java Transaction.java Variable.java
 ```
 3. Get back to the directory where project_adb is
 ```
-		$ cd ..
+	$ cd ..
 ```
 4. Run the project
 ```
-		$ java project_adb.Main <location/of/test/file/filename.txt>
+	$ java project_adb.Main <location/of/test/file/filename.txt>
 ```
 
 
