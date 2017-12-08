@@ -1,10 +1,8 @@
-**Advanced Database System:**
+# **Advanced Database System:**
 
-**Replicated Concurrency Control and Recovery**
+## **Replicated Concurrency Control and Recovery**
 
-..............................................................................................................................
-
-**Author:**
+#### **Author:**
 
   Xintong Wang(N18322289)
   
@@ -14,21 +12,22 @@
 ..............................................................................................................................
 
 
-**Github Repository:** https://github.com/xintong621/project_adb
+#### **Github Repository:** 
+  https://github.com/xintong621/project_adb
 
 
 ..............................................................................................................................
 
 
 
-**Compile and Run:**
+#### **Compile and Run:**
 
-(A)Compile using Eclipse:
+##### (A)Compile using Eclipse:
 
 Since we wrote our project using Eclipse， then it will be great if you are using Eclipse!
 If you are using Eclipse, simpliy import whole thing into Eclipse as a project.
 
-(B)Compile in terminal:
+##### (B)Compile in terminal:
 You will only need src/project_adb folder and testcase folder.
 
 1. First get into the folder where all .java files are.
@@ -51,7 +50,7 @@ $ java project_adb.Main
 ..............................................................................................................................
 
 
-**Input file:**
+#### **Input file:**
 
 We have several sample testcase in testcase folder. If you want to run our program using your testcase, please first put it into the testcase folder. **Make sure testcase folder are at the same directory with project_adb folder.**
 When you are reminded to type the name of your input file, simpliy type the name. Such as:
