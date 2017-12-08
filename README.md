@@ -1,11 +1,11 @@
-**Advanced Database System:**
-**Replicated Concurrency Control and Recovery**
-=====
+## **Advanced Database System** 
+## **Replicated Concurrency Control and Recovery**
+
 #### **Author:**
 
   Xintong Wang(N18322289)
   
-  Dailing Zhu(N11754882)
+  Dailing Zhu(N11754882) @ZhuDailing
   
 
 
