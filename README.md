@@ -26,7 +26,25 @@ If you are using Eclipse, simpliy import whole thing into Eclipse as a project.
 ##### (B)Compile in terminal:
 We have packed our project as a .jar file named ADBProject.jar. In order to run the project, you need first reach to the location of ADBProject.jar, then type:
 ```
-    $ java -jar ADBProject.jar <name of your test file>
+        $ java -jar ADBProject.jar <location/of/test/file/filename.txt>
+```
+
+If you wanna compile and run our program without using ADBProject.jar, you can follow steps below:
+1. First get into the folder where all .java files are.
+```
+		$ cd ~/src/project_adb
+```
+2. Compile all files in order to create .class files.
+```
+		$ javac Main.java DM.java Graph.java Site.java TM.java Transaction.java Variable.java
+```
+3. Get back to the directory where project_adb is
+```
+		$ cd ..
+```
+4. Run the project
+```
+		$ java project_adb.Main <location/of/test/file/filename.txt>
 ```
 
 
