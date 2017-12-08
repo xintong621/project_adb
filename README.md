@@ -1,6 +1,6 @@
 # Advanced Database System
 
-Replicated Concurrency Control and Recovery Distributed System with multiversion concurrency control, deadlock detection, replication, and failure recovery.
+This is the final project of Advanced Database System course from Graduate School of Arts and Science, New York University. The aim of this project is to implement a **Replicated Concurrency Control and Recovery Distributed System** with multiversion concurrency control, deadlock detection, replication, and failure recovery.
 
 ### **Author:**
 
