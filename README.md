@@ -29,6 +29,7 @@ Since we wrote our project using Eclipse， then it will be great if you are usi
 If you are using Eclipse, simpliy import whole thing into Eclipse as a project.
 
 (B)Compile in terminal:
+You will only need src/project_adb folder and testcase folder.
 
 1. First get into the folder where all .java files are.
 ```
@@ -52,7 +53,7 @@ $ java project_adb.Main
 
 **Input file:**
 
-We have several sample testcase in testcase folder. If you want to run our program using your testcase, please first put it into the testcase folder.
+We have several sample testcase in testcase folder. If you want to run our program using your testcase, please first put it into the testcase folder. **Make sure testcase folder are at the same directory with project_adb folder.**
 When you are reminded to type the name of your input file, simpliy type the name. Such as:
 ```
 test1.txt
