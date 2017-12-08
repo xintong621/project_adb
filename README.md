@@ -20,7 +20,7 @@ Replicated Concurrency Control and Recovery Distributed System with multiversion
 
 ##### (A)Compile using Eclipse:
 
-Since we wrote our project using Eclipse， then it will be great if you are using Eclipse!
+Since we wrote our project using Eclipse，then it will be great if you are using Eclipse!
 If you are using Eclipse, simpliy import whole thing into Eclipse as a project.
 
 ##### (B)Compile in terminal:
