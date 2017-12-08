@@ -28,7 +28,10 @@ We have packed our project as a .jar file named ADBProject.jar. In order to run 
 ```
         $ java -jar ADBProject.jar <location/of/test/file/filename.txt>
 ```
-
+to run all testcases in one time using ADBProject.jar (the result will store in output.txt):
+```
+        $ sh run.sh > output.txt
+```
 If you wanna compile and run our program without using ADBProject.jar, you can follow steps below:
 1. First get into the folder where all .java files are.
 ```
