@@ -1,21 +1,21 @@
 ## **Advanced Database System** 
 ## **Replicated Concurrency Control and Recovery**
 
-#### **Author:**
+### **Author:**
 
   Xintong Wang(N18322289)
   
-  Dailing Zhu(N11754882) @ZhuDailing
+  Dailing Zhu(N11754882)
   
 
 
-#### **Github Repository:** 
+### **Github Repository:** 
   https://github.com/xintong621/project_adb
 
 
 
 
-#### **Compile and Run:**
+### **Compile and Run:**
 
 ##### (A)Compile using Eclipse:
 
@@ -43,7 +43,7 @@ $ java project_adb.Main
 ```
 
 
-#### **Input file:**
+### **Input file:**
 
 We have several sample testcase in testcase folder. If you want to run our program using your testcase, please first put it into the testcase folder. **Make sure testcase folder are at the same directory with project_adb folder.**
 When you are reminded to type the name of your input file, simpliy type the name. Such as:
