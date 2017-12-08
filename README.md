@@ -33,19 +33,23 @@ to run all testcases in one time using ADBProject.jar (the result will store in 
         $ sh run.sh > output.txt
 ```
 If you wanna compile and run our program without using ADBProject.jar, you can follow steps below:
-1. First get into the folder where all .java files are.
+1. First get into the folder where all .java files are:
 ```
 	$ cd ~/src/project_adb
 ```
-2. Compile all files in order to create .class files.
+2. make a new directory named bin:
+```
+	$ mkdir bin
+```
+3. Compile all files in order to create .class files:
 ```
 	$ javac -d bin src/project_adb/*.java 
 ```
-3. Get back to the directory where project_adb is
+4. Get back to the directory where project_adb is:
 ```
 	$ cd ..
 ```
-4. Run the project
+5. Run the project:
 ```
 	$ java project_adb.Main <location/of/test/file/filename.txt>
 ```
