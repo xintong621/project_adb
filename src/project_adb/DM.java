@@ -130,7 +130,7 @@ public class DM {
 	}
 	
 	protected static void updateDatabase(String changedVariableID, int changedValue) {
-		for(Site s : DM.database) {1ß
+		for(Site s : DM.database) {
 			if(s.isUp()) {
 				if(s.isVariableExists(changedVariableID)) {
 					s.changeVariableValue(changedVariableID, changedValue);
