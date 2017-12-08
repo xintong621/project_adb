@@ -1,6 +1,6 @@
-## **Advanced Database System
+## Advanced Database System
 
-Replicated Concurrency Control and Recovery
+Replicated Concurrency Control and Recovery Distributed System with multiversion concurrency control, deadlock detection, replication, and failure recovery.
 
 ### **Author:**
 
