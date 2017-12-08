@@ -32,7 +32,7 @@ If you are using Eclipse, simpliy import whole thing into Eclipse as a project.
 
 1. First get into the folder where all .java files are.
 ```
-$ cd ~/RepCRec/project_adb
+$ cd ~/src/project_adb
 ```
 2. Compile all files.
 ```
