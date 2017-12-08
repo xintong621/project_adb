@@ -106,10 +106,8 @@ public class TM {
 						addToWaitingAction(onReadVariableID, "R", null, transaction);
 						System.out.println("Waitlist: Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
 					}
-					if(deadLockDetection() == false) {
-						System.out.println("Deadlock: There is no deadlock");
-					} else {
-						System.out.print("Deadlock: Deadlock detected, ");
+					if(deadLockDetection()) {
+						System.out.print("***Deadlock: Deadlock detected, ");
 						killYoungest(); // kill youngest
 					}
 				}
@@ -183,11 +181,8 @@ public class TM {
 					addToWaitingAction(onChangeVariableID, "W", onChangeValue.toString(), transaction);
 					System.out.println("Waitlist: Write action " + onChangeVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
 				}
-				if(deadLockDetection() == false){
-					System.out.println("Deadlock: there is no deadlock");
-				} else {
-					System.out.print("Deadlock: deadlock detected, ");
-					// remove from waitinglist
+				if(deadLockDetection()){
+					System.out.print("***Deadlock: deadlock detected, ");
 					killYoungest();
 				}
 			}

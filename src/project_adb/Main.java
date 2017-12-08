@@ -74,6 +74,8 @@ public class Main {
 				// only related to write action
 				String transactionID = lineSplit[1].split("\\)")[0].trim();
 				tm.end(transactionID);
+			} else {
+				System.out.println(line);
 			}
 		}
 	}
@@ -81,5 +83,6 @@ public class Main {
 	
 	public static void main(String[] args) throws IOException {
 		readfile(args[0]);
+		System.out.println();
 	}
 }
