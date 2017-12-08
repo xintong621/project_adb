@@ -39,7 +39,7 @@ If you wanna compile and run our program without using ADBProject.jar, you can f
 ```
 2. Compile all files in order to create .class files.
 ```
-	$ javac Main.java DM.java Graph.java Site.java TM.java Transaction.java Variable.java
+	$ javac -d bin src/project_adb/*.java 
 ```
 3. Get back to the directory where project_adb is
 ```
