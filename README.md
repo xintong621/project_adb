@@ -1,16 +1,17 @@
-## **Advanced Database System** 
-## **Replicated Concurrency Control and Recovery**
+## **Advanced Database System
+
+Replicated Concurrency Control and Recovery
 
 ### **Author:**
 
-  Xintong Wang(N18322289)
+    Xintong Wang(N18322289)
   
-  Dailing Zhu(N11754882)
+    Dailing Zhu(N11754882)
   
 
 
 ### **Github Repository:** 
-  https://github.com/xintong621/project_adb
+    https://github.com/xintong621/project_adb
 
 
 
