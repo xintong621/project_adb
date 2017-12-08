@@ -337,7 +337,18 @@ public class TM {
 	public void recover(String siteNum) {
 		int siteID = Integer.parseInt(siteNum);
 		DM.recover(siteID);
-		
+		for(Site s : DM.database) {
+			for(Transaction transaction : waitingAction.keySet()) {
+				if(transaction.getType().equals("RO")) {
+					String variableID = waitingAction.get(transaction).get(0);
+					if(s.isVariableExists(variableID)) {
+						int value = s.getVariable(variableID).getValue();
+						transaction.tempTable.replace(variableID, value);
+				}
+					
+				}
+			}
+		}
 		resumeWaitingAction();
 	}
 
