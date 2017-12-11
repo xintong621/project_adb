@@ -184,6 +184,7 @@ public class TM {
 				return true;
 			} else {
 				if(DM.checkOwnLock(transaction, onChangeVariableID)) {
+					DM.setLock(transaction, onChangeVariableID, "WL");
 					transaction.tempTable.put(onChangeVariableID, onChangeValue);
 					System.out.println("Write: transaction " + transaction.getTransactionID() + " has changed variable " + onChangeVariableID + " to " + onChangeValue
 							+ " in local copy");
