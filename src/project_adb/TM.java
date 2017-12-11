@@ -84,7 +84,7 @@ public class TM {
 			// add readLock
 			if(DM.checkReadState(onReadVariableID) == true) {
 				if(DM.checkWriteLock(onReadVariableID) == false) {
-					if(DM.checkReadLock(onReadVariableID) == false) {
+					if(DM.checkReadLock(onReadVariableID) == false && !DM.checkOwnLock(transaction, onReadVariableID)) {
 						DM.setLock(transaction, onReadVariableID, "RL"); // add readlock
 					}
 					for(Site s : DM.database) {
@@ -100,15 +100,21 @@ public class TM {
 						}
 					}
 				} else {
-					// all sites contains this variable has been write locked
-					// add to waiting list
-					if(!waitingAction.containsKey(transaction)) {
-						addToWaitingAction(onReadVariableID, "R", null, transaction);
-						System.out.println("Waitlist: Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
-					}
-					if(deadLockDetection()) {
-						System.out.print("***Deadlock: Deadlock detected, ");
-						killYoungest(); // kill youngest
+					if (DM.checkOwnLock(transaction, onReadVariableID)) {
+						int readItem = transaction.tempTable.get(onReadVariableID);
+						System.out.println("Read: transaction " + transactionID + " has read variable " + onReadVariableID + " in temTable" + " with value " + readItem);
+						return true;
+					} else {
+						// all sites contains this variable has been write locked
+						// add to waiting list
+						if(!waitingAction.containsKey(transaction)) {
+							addToWaitingAction(onReadVariableID, "R", null, transaction);
+							System.out.println("Waitlist: Read action " + onReadVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+						}
+						if(deadLockDetection()) {
+							System.out.print("***Deadlock: Deadlock detected, ");
+							killYoungest(); // kill youngest
+						}
 					}
 				}
 			} else {
@@ -167,7 +173,7 @@ public class TM {
 			return true;
 		}
 		if(DM.checkWriteState(onChangeVariableID) == true) {
-			if((DM.checkWriteLock(onChangeVariableID) == false) && DM.checkReadLock(onChangeVariableID) == false) {
+			if((DM.checkWriteLock(onChangeVariableID) == false) && (DM.checkReadLock(onChangeVariableID) == false)) {
 				// execute write action
 				DM.setLock(transaction, onChangeVariableID, "WL");
 
@@ -177,14 +183,22 @@ public class TM {
 						+ " in local copy");
 				return true;
 			} else {
-				if(!waitingAction.containsKey(transaction)) {
-					addToWaitingAction(onChangeVariableID, "W", onChangeValue.toString(), transaction);
-					System.out.println("Waitlist: Write action " + onChangeVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+				if(DM.checkOwnLock(transaction, onChangeVariableID)) {
+					transaction.tempTable.put(onChangeVariableID, onChangeValue);
+					System.out.println("Write: transaction " + transaction.getTransactionID() + " has changed variable " + onChangeVariableID + " to " + onChangeValue
+							+ " in local copy");
+					return true;
+				} else {
+					if(!waitingAction.containsKey(transaction)) {
+						addToWaitingAction(onChangeVariableID, "W", onChangeValue.toString(), transaction);
+						System.out.println("Waitlist: Write action " + onChangeVariableID + " of " + "Transaction " + transaction.getTransactionID() + " has been added to waiting list");
+					}
+					if(deadLockDetection()){
+						System.out.print("***Deadlock: deadlock detected, ");
+						killYoungest();
+					}
 				}
-				if(deadLockDetection()){
-					System.out.print("***Deadlock: deadlock detected, ");
-					killYoungest();
-				}
+
 			}
 		} else {
 			if(!waitingAction.containsKey(transaction)) {

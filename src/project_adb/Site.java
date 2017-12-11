@@ -133,6 +133,17 @@ public class Site {
 		return false;
 	}
 	
+	protected boolean isLockedBySelf(Transaction transaction, String variableID) {
+		for (Variable v : lockTable.keySet()) {
+			if (variableID.equals(v.getVariableID())){
+				if (lockTable.get(v) != null && lockTable.get(v).containsKey(transaction)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	protected boolean checkLockState(String variableID, String typeLock) {
 		//return true if readlocked || writelocked
 		boolean result = false;

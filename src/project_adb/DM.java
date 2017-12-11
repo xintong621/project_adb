@@ -124,6 +124,16 @@ public class DM {
 		return false;
 	}
 	
+	protected static boolean checkOwnLock(Transaction transaction, String variableID) {
+		for(Site s : database) {
+			if(s.isUp() && s.isVariableExists(variableID)) {
+				if(s.isLockedBySelf(transaction, variableID))
+					return true;
+			}
+		}
+		return false;
+	}
+	
 	protected static Variable readVariable(int SiteIndex, String variableID) {	
 		Site s = database.get(SiteIndex - 1);
 		return s.getVariable(variableID);
