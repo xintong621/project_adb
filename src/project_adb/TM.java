@@ -304,9 +304,7 @@ public class TM {
 			String variableID = waitingAction.get(tr).get(0);
 			String actionInfo = waitingAction.get(tr).get(1);
 			String transactionID = tr.getTransactionID();
-			if(!runningTransaction.contains(tr)) {
-				runningTransaction.add(tr);
-			}
+			runningTransaction.add(tr);
 			if(actionInfo.equals("R")) {
 				couldRemove = read(transactionID, variableID);
 			} else {
@@ -324,20 +322,21 @@ public class TM {
 	public void fail(String siteNum) {
 		// transaction abort
 		int siteID = Integer.parseInt(siteNum);
-		ArrayList<Transaction> abortList = new ArrayList<Transaction>();
+		boolean siteHasRunning = false;
 		for(Site s : DM.database) {
 			if(s.getSiteIndex() == siteID) {
 				for(Transaction transaction : runningTransaction) {
 					if(s.ifSiteContainsTransaction(transaction)) {
-						abortList.add(transaction);
+						DM.fail(siteID);
+						System.out.println("***alert:" + transaction.getTransactionID() + " has been aborted because site " + siteID + " is down");
+						terminate(transaction);
+						siteHasRunning = true;
+						break;
 					}
 				}
-				DM.fail(siteID);
-				for(Transaction transaction : abortList) {
-					System.out.println("***alert:" + transaction.getTransactionID() + " has been aborted because site " + siteID + " is down");
-					terminate(transaction);
+				if(siteHasRunning == false) {
+					DM.fail(siteID);
 				}
-				
 				break;
 			}
 		}
