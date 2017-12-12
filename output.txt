@@ -335,7 +335,7 @@ Terminate: Transaction T2 has ended.
 Read: transaction T3 has read variable x3.4 with value 44
 Fail: Site 4 is down
 ***alert:T3 has been aborted because site 4 is down
-Terminate: Transaction T3 has ended.
+***alert: Transaction T3 does not exist
 Read: transaction T1 has read variable x2.1 with value 20
 Terminate: Transaction T1 has ended.
 
